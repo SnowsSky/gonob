@@ -1,12 +1,15 @@
 package main
 
 import (
-	"gonob/wrapper"
+	"gonob/aur"
 )
 
 func parser(args []string) {
 	switch args[0] {
-	case "upgrade":
-		wrapper.Upgrade()
+	case "install":
+		if args[1] == "--aur" {
+			aur.Install(args[2:])
+		}
+
 	}
 }
