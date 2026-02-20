@@ -3,6 +3,7 @@ package wrapper
 import (
 	"fmt"
 
+	"github.com/Jguer/go-alpm/v2"
 	"github.com/Morganamilo/go-pacmanconf"
 )
 
