@@ -33,10 +33,5 @@ func Sync() {
 			return
 		}
 		db.SetServers(repo.Servers)
-
-		foundPkg := db.Pkg("vim")
-		if foundPkg != nil {
-			addPkg = foundPkg
-		}
 	}
 }
