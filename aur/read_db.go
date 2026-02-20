@@ -23,5 +23,11 @@ func Read_db() []string {
 	if h.Release() != nil {
 		os.Exit(1)
 	}
-	return db.PkgCache().Slice()
+
+	pkgs := db.PkgCache().Slice()
+	names := make([]string, len(pkgs))
+	for i, p := range pkgs {
+		names[i] = p.Name()
+	}
+	return names
 }
