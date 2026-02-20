@@ -13,6 +13,6 @@
     "reinstalling": "Réinstallation",
     "build_success": "Le paquet a été construit avec succès.",
     "canceled": "Opération annulée.",
-    "unknown_command": "Commande inconnue."
+    "unknown_command": "Commande inconnue. Veuillez essayer --help"
 
 }
