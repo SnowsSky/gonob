@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"gonob/aur"
+	"gonob/translations"
 )
 
 func parser(args []string) {
@@ -10,6 +12,7 @@ func parser(args []string) {
 		if args[1] == "--aur" {
 			aur.Install(args[2:])
 		}
-
+	default:
+		fmt.Println(translations.Translate("unknown_command"))
 	}
 }

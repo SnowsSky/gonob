@@ -2,10 +2,22 @@ package aur
 
 import (
 	"fmt"
+	"gonob/translations"
 	"os"
 	"os/exec"
+
+	alpm "github.com/Jguer/dyalpm"
 )
 
+var Reset = "\033[0m"
+var Red = "\033[1;31m"
+var Green = "\033[1;32m"
+var Yellow = "\033[1;33m"
+var Blue = "\033[1;34m"
+var Magenta = "\033[1;35m"
+var Cyan = "\033[1;36m"
+var Gray = "\033[1;37m"
+var White = "\033[1;97m"
 var builddest string
 
 func CheckPkgFolder() bool {
@@ -16,6 +28,27 @@ func CheckPkgFolder() bool {
 	return true
 }
 
+func Read_db(pkg_name string) error {
+	handle, err := alpm.Initialize("/", "/var/lib/pacman")
+	if err != nil {
+		return err
+	}
+	defer handle.Release()
+
+	// Get local database
+	localDB, err := handle.LocalDB()
+	if err != nil {
+		return err
+	}
+
+	// Get a package
+	pkg := localDB.Pkg(pkg_name)
+	if pkg == nil {
+		return err
+	}
+	return nil
+}
+
 func Install(pkgs []string) {
 	for i, pkg := range pkgs {
 		pkg_name, pkg_version, pkg_maintainer, pkg_popularity, err := Search(pkg, true)
@@ -23,23 +56,17 @@ func Install(pkgs []string) {
 			fmt.Println(err)
 			return
 		}
-
-		pkgs := Read_db()
-		for _, pkg := range pkgs {
-			if pkg == pkg_name {
-				fmt.Printf("Installing    [%d/%d] %s@%s...\n", i+1, len(pkgs), pkg_name, pkg_version)
-			} else {
-				fmt.Printf("Reinstalling    [%d/%d] %s@%s...\n", i+1, len(pkgs), pkg_name, pkg_version)
-			}
+		err = Read_db(pkg_name)
+		if err != nil {
+			fmt.Println(Green + "==>" + Reset + White + translations.Translate("installing") + "[" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
+		} else {
+			fmt.Println(Green + "==>" + Reset + White + translations.Translate("reinstalling") + "[" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
+			fmt.Printf("%s==>%s %sReinstalling    [%d/%d]  \n  %s-->%s %s@%s...%s\n", Blue, Reset, White, i+1, len(pkgs), Blue, Reset, pkg_name, pkg_version, Reset)
 		}
-		//print(f"{colors.BOLD}==> {colors.END} SUMMARY :\n{len(to_install)} Package(s) to install:\n" + " ".join(f"{colors.CYAN}{pkg}{colors.END}@{colors.GREEN}{version}{colors.END}" for pkg, version in to_install)+
-		//    f"\n{len(to_reinstall)} Package(s) to reinstall:\n" + " ".join(f"{colors.CYAN}{pkg}{colors.END}@{colors.GREEN}{version}{colors.END}" for pkg, version in to_reinstall))
-
 		builddest = "/tmp/" + pkg_name
 		fmt.Println(pkg_name, pkg_version, pkg_maintainer, pkg_popularity)
 
 		if !CheckPkgFolder() {
-			fmt.Println("==> Cloning", pkg_name, "'s repository...")
 			cmd := exec.Command("git", "clone", fmt.Sprintf("https://aur.archlinux.org/%s.git", pkg_name), "/tmp/"+pkg_name)
 
 			cmd.Stdout = os.Stdout
@@ -47,23 +74,21 @@ func Install(pkgs []string) {
 
 			err = cmd.Run()
 			if err != nil {
-				fmt.Println("==> ERROR: Failed to clone", pkg_name)
+				fmt.Println(Red + "==> " + translations.Translate("error_string") + Reset + White + translations.Translate("clone_error") + Reset)
 			}
 		} else {
-			fmt.Println("==> Warning:", pkg_name+"'s folder already exists, skipping...")
+			fmt.Println(Yellow + "==> " + translations.Translate("warning_string") + Reset + White + translations.Translate("folder_already_exists") + Reset)
 		}
 
-		fmt.Println("==> Building", pkg_name+"...")
 		cmd := exec.Command("makepkg", "-si", "--noconfirm")
 		cmd.Dir = builddest
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		err = cmd.Run()
 		if err != nil {
-			fmt.Println("==> ERROR: Failed to build", pkg_name)
+			fmt.Println(Red + "==> " + translations.Translate("error_string") + Reset + White + translations.Translate("build_error") + Reset)
 			return
 		}
-
-		fmt.Println("==> Package", pkg_name, "successfully built and installed.")
+		fmt.Println(Green + "==> " + Reset + White + translations.Translate("build_success") + Reset)
 	}
 }
