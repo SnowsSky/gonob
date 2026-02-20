@@ -77,7 +77,7 @@ func Install(pkgs []string) {
 				fmt.Println(Red + "==> " + translations.Translate("error_string") + Reset + White + translations.Translate("clone_error") + Reset)
 			}
 		} else {
-			fmt.Println(Yellow + "==> " + translations.Translate("warning_string") + Reset + White + translations.Translate("folder_already_exists") + Reset)
+			fmt.Println(Yellow + "==> " + translations.Translate("warning_string") + " : " + Reset + White + translations.Translate("folder_already_exists") + Reset)
 		}
 
 		cmd := exec.Command("makepkg", "-si", "--noconfirm")

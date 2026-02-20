@@ -8,7 +8,7 @@
     "error_string": "ERREUR",
     "warning_string": "ATTENTION",
     "installing": "Installation",
-    "reinstallling": "Réinstallation",
+    "reinstalling": "Réinstallation",
     "build_success": "Le paquet a été construit avec succès.",
     "unknown_command": "Commande inconnue."
 
