@@ -13,4 +13,5 @@ func InitAlpm() {
 		return
 	}
 	defer h.Release()
+	fmt.Println("==> Alpm Initialised.")
 }
