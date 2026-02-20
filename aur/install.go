@@ -58,10 +58,10 @@ func Install(pkgs []string) {
 		}
 		err = Read_db(pkg_name)
 		if err != nil {
-			fmt.Println(Green + "==>" + Reset + White + translations.Translate("installing") + "[" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
+			fmt.Println(Green + "==> " + Reset + White + translations.Translate("installing") + "[" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
 		} else {
-			fmt.Println(Green + "==>" + Reset + White + translations.Translate("reinstalling") + "[" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
-			fmt.Printf("%s==>%s %sReinstalling    [%d/%d]  \n  %s-->%s %s@%s...%s\n", Blue, Reset, White, i+1, len(pkgs), Blue, Reset, pkg_name, pkg_version, Reset)
+			fmt.Println(Green + "==> " + Reset + White + translations.Translate("reinstalling") + "[" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
+
 		}
 		builddest = "/tmp/" + pkg_name
 		fmt.Println(pkg_name, pkg_version, pkg_maintainer, pkg_popularity)
