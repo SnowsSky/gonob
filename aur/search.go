@@ -3,6 +3,7 @@ package aur
 import (
 	"encoding/json"
 	"fmt"
+	"gonob/translations"
 	"net/http"
 )
 
@@ -24,21 +25,21 @@ func Search(pkg string, to_install bool) (string, string, string, float64, error
 		URL := "https://aur.archlinux.org/rpc.php?v=5&type=info&arg=" + pkg
 		response, err := http.Get(URL)
 		if err != nil {
-			return "", "", "", 0, fmt.Errorf("==> ERROR: Unable to reach the AUR.")
+			return "", "", "", 0, fmt.Errorf(Red + "==> " + Reset + White + translations.Translate("error_string") + " : " + translations.Translate("aur_unreachable") + Reset)
 		}
 		defer response.Body.Close()
 
 		if response.StatusCode != http.StatusOK {
-			return "", "", "", 0, fmt.Errorf("==> ERROR: Unable to reach the AUR.")
+			return "", "", "", 0, fmt.Errorf(Red + "==> " + Reset + White + translations.Translate("error_string") + " : " + translations.Translate("aur_unreachable") + Reset)
 		}
 
 		var aurResp AURResponse
 		if err := json.NewDecoder(response.Body).Decode(&aurResp); err != nil {
-			return "", "", "", 0, fmt.Errorf("==> ERROR: %v", err)
+			return "", "", "", 0, fmt.Errorf(Red + "==> " + Reset + White + translations.Translate("error_string") + " : " + err.Error() + Reset)
 		}
 
 		if aurResp.ResultCount == 0 || len(aurResp.Results) == 0 {
-			return "", "", "", 0, fmt.Errorf("==> ERROR: cannot find package %s in AUR", pkg)
+			return "", "", "", 0, fmt.Errorf(Red + "==> " + Reset + White + translations.Translate("error_string") + " : " + fmt.Sprintf(translations.Translate("aur_pkg_not_found"), pkg) + Reset)
 		}
 
 		result := aurResp.Results[0]
