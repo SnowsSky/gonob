@@ -23,21 +23,21 @@ func Search(pkg string, to_install bool) (string, string, *string, float64, erro
 		URL := "https://aur.archlinux.org/rpc.php?v=5&type=info&arg=" + pkg
 		response, err := http.Get(URL)
 		if err != nil {
-			return "", "", nil, 0, fmt.Errorf("==> HTTP ERROR: %v", err)
+			return "", "", nil, 0, fmt.Errorf("==> ERROR: Unable to reach the AUR.")
 		}
 		defer response.Body.Close()
 
 		if response.StatusCode != http.StatusOK {
-			return "", "", nil, 0, fmt.Errorf("==> HTTP STATUS: %s", response.Status)
+			return "", "", nil, 0, fmt.Errorf("==> ERROR: Unable to reach the AUR.")
 		}
 
 		var aurResp AURResponse
 		if err := json.NewDecoder(response.Body).Decode(&aurResp); err != nil {
-			return "", "", nil, 0, fmt.Errorf("==> JSON ERROR: %v", err)
+			return "", "", nil, 0, fmt.Errorf("==> ERROR: %v", err)
 		}
 
 		if aurResp.ResultCount == 0 || len(aurResp.Results) == 0 {
-			return "", "", nil, 0, fmt.Errorf("package not found")
+			return "", "", nil, 0, fmt.Errorf("==> ERROR: cannot find package %s in AUR", pkg)
 		}
 
 		result := aurResp.Results[0]
