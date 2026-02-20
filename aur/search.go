@@ -39,7 +39,7 @@ func Search(pkg string, to_install bool) (string, string, string, float64, error
 		}
 
 		if aurResp.ResultCount == 0 || len(aurResp.Results) == 0 {
-			return "", "", "", 0, fmt.Errorf(Red + "==> " + Reset + White + translations.Translate("error_string") + " : " + fmt.Sprintf(translations.Translate("aur_pkg_not_found"), pkg) + Reset)
+			return "", "", "", 0, fmt.Errorf(Red + "==> " + Reset + White + translations.Translate("error_string") + " : " + fmt.Sprintf(translations.Translate("unknown_aur_package"), pkg) + Reset)
 		}
 
 		result := aurResp.Results[0]
