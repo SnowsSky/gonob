@@ -7,10 +7,12 @@
     "folder_already_exists": "Le dossier de construction existe déjà.",
     "error_string": "ERREUR",
     "low_popularity": "Ce paquet est peu populaire et peut donc probablement être indésirable.",
+    "ask_to_continue": "Voulez-vous continuer ?",
     "warning_string": "ATTENTION",
     "installing": "Installation",
     "reinstalling": "Réinstallation",
     "build_success": "Le paquet a été construit avec succès.",
+    "canceled": "Opération annulée.",
     "unknown_command": "Commande inconnue."
 
 }

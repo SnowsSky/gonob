@@ -5,6 +5,7 @@ import (
 	"gonob/translations"
 	"os"
 	"os/exec"
+	"strings"
 
 	alpm "github.com/Jguer/dyalpm"
 )
@@ -65,7 +66,14 @@ func Install(pkgs []string) {
 		}
 		builddest = "/tmp/" + pkg_name
 		if pkg_popularity <= 2.5 {
+			var response string
 			fmt.Println(Yellow + "==> " + translations.Translate("warning_string") + " : " + Reset + White + translations.Translate("low_popularity") + Reset)
+			fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [Y/n]" + Reset)
+			fmt.Scan(&response)
+			if strings.ToLower(response) == "n" {
+				fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
+				return
+			}
 		}
 		fmt.Println(pkg_name, pkg_version, pkg_maintainer, pkg_popularity)
 
