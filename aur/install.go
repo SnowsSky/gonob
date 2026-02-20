@@ -17,12 +17,24 @@ func CheckPkgFolder() bool {
 }
 
 func Install(pkgs []string) {
-	for _, pkg := range pkgs {
+	for i, pkg := range pkgs {
 		pkg_name, pkg_version, pkg_maintainer, pkg_popularity, err := Search(pkg, true)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
+
+		pkgs := Read_db()
+		for _, pkg := range pkgs {
+			if pkg == pkg_name {
+				fmt.Printf("Installing    [%d/%d] %s@%s...\n", i+1, len(pkgs), pkg_name, pkg_version)
+			} else {
+				fmt.Printf("Reinstalling    [%d/%d] %s@%s...\n", i+1, len(pkgs), pkg_name, pkg_version)
+			}
+		}
+		//print(f"{colors.BOLD}==> {colors.END} SUMMARY :\n{len(to_install)} Package(s) to install:\n" + " ".join(f"{colors.CYAN}{pkg}{colors.END}@{colors.GREEN}{version}{colors.END}" for pkg, version in to_install)+
+		//    f"\n{len(to_reinstall)} Package(s) to reinstall:\n" + " ".join(f"{colors.CYAN}{pkg}{colors.END}@{colors.GREEN}{version}{colors.END}" for pkg, version in to_reinstall))
+
 		builddest = "/tmp/" + pkg_name
 		fmt.Println(pkg_name, pkg_version, pkg_maintainer, pkg_popularity)
 
