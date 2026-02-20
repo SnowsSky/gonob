@@ -58,12 +58,15 @@ func Install(pkgs []string) {
 		}
 		err = Read_db(pkg_name)
 		if err != nil {
-			fmt.Println(Green + "==> " + Reset + White + translations.Translate("installing") + "[" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
+			fmt.Println(Green + "==> " + Reset + White + translations.Translate("installing") + " [" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
 		} else {
-			fmt.Println(Green + "==> " + Reset + White + translations.Translate("reinstalling") + "[" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
+			fmt.Println(Green + "==> " + Reset + White + translations.Translate("reinstalling") + " [" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
 
 		}
 		builddest = "/tmp/" + pkg_name
+		if pkg_popularity <= 2.5 {
+			fmt.Println(Yellow + "==> " + translations.Translate("warning_string") + " : " + Reset + White + translations.Translate("low_popularity") + Reset)
+		}
 		fmt.Println(pkg_name, pkg_version, pkg_maintainer, pkg_popularity)
 
 		if !CheckPkgFolder() {
