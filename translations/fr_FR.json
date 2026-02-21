@@ -10,6 +10,7 @@
     "low_popularity": "Ce paquet est peu populaire et peut donc probablement être indésirable.",
     "ask_to_continue": "Voulez-vous continuer ?",
     "search_found": "Paquet(s) trouvé(s) pour",
+    "fetch_aur_package_list": "Récupération de la liste des paquets de l'AUR...",
     "installing": "Installation",
     "reinstalling": "Réinstallation",
     "build_success": "Le paquet a été construit avec succès.",

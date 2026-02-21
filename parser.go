@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"gonob/aur"
 	"gonob/translations"
-	"gonob/wrapper"
 )
 
 var version = "1.0.0-dev-7"
@@ -26,7 +25,7 @@ func parser(args []string) {
 		}
 	case "upgrade", "-Syu":
 		if args[1] == "--aur" {
-			wrapper.CheckPackageAvailabilityOnSyncDatabases()
+			aur.Update()
 		}
 	default:
 		fmt.Println(aur.Yellow + "==> " + translations.Translate("warning_string") + " : " + translations.Translate("unknown_command") + aur.Reset)
