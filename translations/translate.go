@@ -13,7 +13,11 @@ func Translate(translation_type string) string {
 
 	file, err := os.ReadFile("/etc/gonob/translations/" + locale + ".json")
 	if err != nil {
-		return fmt.Sprintf("Missing translation file: %s", locale)
+		fmt.Sprintf("Missing translation file: %s. Using default translation", locale)
+		file, err = os.ReadFile("/etc/gonob/translations/us_US.json")
+		if err != nil {
+			return fmt.Sprintf("Missing translation file: %s.", locale)
+		}
 	}
 
 	var data map[string]string

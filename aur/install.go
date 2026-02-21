@@ -52,7 +52,7 @@ func Read_db(pkg_name string) error {
 
 func Install(pkgs []string) {
 	for i, pkg := range pkgs {
-		pkg_name, pkg_version, pkg_maintainer, pkg_popularity, err := Search(pkg, true)
+		pkg_name, pkg_version, pkg_maintainer, pkg_popularity, err := InstallSearch(pkg)
 		if err != nil {
 			fmt.Println(err)
 			return
