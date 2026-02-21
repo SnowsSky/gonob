@@ -1,6 +1,7 @@
 package aur
 
 import (
+	"fmt"
 	"log"
 
 	alpm "github.com/Jguer/dyalpm"
@@ -18,8 +19,10 @@ func Update() {
 	}
 	AurPackages := []string{}
 	err = localDB.PkgCache().ForEach(func(pkg alpm.Package) error {
-		if pkg.Origin() != alpm.PkgFromSyncDB {
+		fmt.Println(pkg.Base())
+		if pkg.Base() != "" {
 			AurPackages = append(AurPackages, pkg.Name())
+			fmt.Println(pkg.Name())
 		}
 		return nil
 	})
