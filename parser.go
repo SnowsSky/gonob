@@ -6,7 +6,7 @@ import (
 	"gonob/translations"
 )
 
-var version = "1.0.0-dev-2"
+var version = "1.0.0-dev-7"
 
 func parser(args []string) {
 	if len(args) == 0 {
@@ -22,7 +22,7 @@ func parser(args []string) {
 		fmt.Println(aur.White + "gonob@" + version + "\nhttps://github.com/SnowsSky/gonob" + aur.Reset)
 	case "search", "-Ss":
 		if args[1] == "--aur" {
-			aur.Search(args[1])
+			aur.Search(args[2])
 		}
 	default:
 		fmt.Println(aur.Yellow + "==> " + translations.Translate("warning_string") + " : " + translations.Translate("unknown_command") + aur.Reset)
