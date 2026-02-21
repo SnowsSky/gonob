@@ -2,6 +2,7 @@ package aur
 
 import (
 	"fmt"
+	"gonob/translations"
 	"log"
 
 	alpm "github.com/Jguer/dyalpm"
@@ -32,13 +33,19 @@ func Update() {
 	}
 	err = localDB.PkgCache().ForEach(func(pkg alpm.Package) error {
 		if _, exists := Packages[pkg.Name()]; !exists {
-			AurPackages = append(AurPackages, pkg.Name())
-			fmt.Println("AUR:", pkg.Name())
+			AurPackages = append(AurPackages, pkg.Name(), pkg.Version())
 		}
 		return nil
 	})
 	if err != nil {
 		return
+	}
+	fmt.Println(AurPackages)
+	if len(AurPackages) == 0 {
+		fmt.Println(Green + "==> " + Reset + White + translations.Translate("no_aur_updates") + Reset)
+	}
+	for AurPackage := range AurPackages {
+		AurPackage = AurPackage
 	}
 
 }
