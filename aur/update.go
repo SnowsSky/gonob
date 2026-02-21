@@ -24,22 +24,13 @@ func Update() {
 	}
 
 	// DB distantes
-	syncDBs, err := handle.SyncDBs()
+	/*syncDBs, err := handle.SyncDBs()
 	if err != nil {
 		log.Fatal(err)
-	}
+	}*/
 
 	for _, pkg := range localDB.PkgCache().Collect() {
-		found := false
-		for _, db := range syncDBs {
-			if db.Pkg(pkg.Name()) != nil {
-				found = true
-				break
-			}
-		}
-		if !found {
-			AurPackages = append(AurPackages, pkg.Name())
-		}
+		fmt.Println(pkg.Name(), pkg.Reason())
 	}
 	fmt.Println(AurPackages)
 
