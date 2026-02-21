@@ -21,7 +21,9 @@ func parser(args []string) {
 	case "--version", "-v":
 		fmt.Println(aur.White + "gonob@" + version + "\nhttps://github.com/SnowsSky/gonob" + aur.Reset)
 	case "search", "-Ss":
-		aur.Search(args[1])
+		if args[1] == "--aur" {
+			aur.Search(args[1])
+		}
 	default:
 		fmt.Println(aur.Yellow + "==> " + translations.Translate("warning_string") + " : " + translations.Translate("unknown_command") + aur.Reset)
 	}
