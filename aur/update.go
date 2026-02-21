@@ -34,13 +34,13 @@ func Update() {
 	err = localDB.PkgCache().ForEach(func(pkg alpm.Package) error {
 		if _, exists := Packages[pkg.Name()]; !exists {
 			AurPackages = append(AurPackages, pkg.Name(), pkg.Version())
+			fmt.Println("AUR:", pkg.Name())
 		}
 		return nil
 	})
 	if err != nil {
 		return
 	}
-	fmt.Println(AurPackages)
 	if len(AurPackages) == 0 {
 		fmt.Println(Green + "==> " + Reset + White + translations.Translate("no_aur_updates") + Reset)
 	}
