@@ -20,7 +20,7 @@ func Update() {
 	AurPackages := []string{}
 	err = localDB.PkgCache().ForEach(func(pkg alpm.Package) error {
 		fmt.Println(pkg.Base())
-		if pkg.Base() != "" {
+		if pkg.Base() == "" {
 			AurPackages = append(AurPackages, pkg.Name())
 			fmt.Println(pkg.Name())
 		}
