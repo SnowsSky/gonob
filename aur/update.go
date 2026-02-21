@@ -17,9 +17,10 @@ func Update() {
 		return
 	}
 	AurPackages := []string{}
-	for _, pkg := range localDB.PkgCache() {
+	err = localDB.PkgCache().ForEach(func(pkg alpm.Package) error {
 		if pkg.Origin() != alpm.PkgFromSyncDB {
 			AurPackages = append(AurPackages, pkg.Name())
 		}
-	}
+		return nil
+	})
 }
