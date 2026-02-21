@@ -9,7 +9,7 @@
     "folder_already_exists": "Le dossier de construction existe déjà.",
     "low_popularity": "Ce paquet est peu populaire et peut donc probablement être indésirable.",
     "ask_to_continue": "Voulez-vous continuer ?",
-    "search_found": "Paquet(s) trouvé(s) pour la recherche",
+    "search_found": "Paquet(s) trouvé(s) pour",
     "installing": "Installation",
     "reinstalling": "Réinstallation",
     "build_success": "Le paquet a été construit avec succès.",
