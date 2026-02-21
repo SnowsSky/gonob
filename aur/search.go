@@ -62,7 +62,7 @@ func Search(pkg string) {
 	}
 
 	for _, result := range aurResp.Results {
-		fmt.Println(Green + "==> " + Reset + White + result.Name + "@" + result.Version + "[" + result.Maintainer + "]\n   -->" + result.Description)
+		fmt.Println(Green + "==> " + Reset + White + result.Name + "@" + result.Version + " [" + result.Maintainer + "]\n   --> " + result.Description)
 	}
 	fmt.Println(Green + "==> " + Reset + White + fmt.Sprint(aurResp.ResultCount) + translations.Translate("search_found") + Reset)
 }
