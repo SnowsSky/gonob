@@ -24,25 +24,13 @@ func Update() {
 	}
 
 	// DB distantes
-	syncDBs, err := handle.SyncDBs()
+	/*syncDBs, err := handle.SyncDBs()
 	if err != nil {
 		log.Fatal(err)
-	}
+	}*/
 
-	// Collecte de tous les noms de paquets officiels
-	officialPackages := make(map[string]bool)
-	for _, db := range syncDBs {
-		for _, pkg := range db.PkgCache().Collect() {
-			officialPackages[pkg.Name()] = true
-		}
-	}
-
-	// Vérification de chaque paquet local
 	for _, pkg := range localDB.PkgCache().Collect() {
-		if !officialPackages[pkg.Name()] {
-			// Si le paquet n'est pas dans les repos officiels → c'est probablement un AUR
-			AurPackages = append(AurPackages, pkg.Name())
-		}
+		fmt.Println(pkg.Name(), pkg.Reason())
 	}
 	fmt.Println(AurPackages)
 
