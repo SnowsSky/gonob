@@ -30,10 +30,15 @@ func Update() {
 	}
 
 	for _, pkg := range localDB.PkgCache().Collect() {
+		found := false
 		for _, db := range syncDBs {
-			if db.Pkg(pkg.Name()) == nil {
-				AurPackages = append(AurPackages, pkg.Name())
+			if db.Pkg(pkg.Name()) != nil {
+				found = true
+				break
 			}
+		}
+		if !found {
+			AurPackages = append(AurPackages, pkg.Name())
 		}
 	}
 	fmt.Println(AurPackages)
