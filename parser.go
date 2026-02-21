@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gonob/aur"
 	"gonob/translations"
+	"gonob/wrapper"
 )
 
 var version = "1.0.0-dev-7"
@@ -22,7 +23,10 @@ func parser(args []string) {
 		fmt.Println(aur.White + "gonob@" + version + "\nhttps://github.com/SnowsSky/gonob" + aur.Reset)
 	case "search", "-Ss":
 		if args[1] == "--aur" {
-			aur.Search(args[2])
+		}
+	case "upgrade", "-Syu":
+		if args[1] == "--aur" {
+			wrapper.CheckPackageAvailabilityOnSyncDatabases()
 		}
 	default:
 		fmt.Println(aur.Yellow + "==> " + translations.Translate("warning_string") + " : " + translations.Translate("unknown_command") + aur.Reset)

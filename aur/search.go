@@ -63,7 +63,7 @@ func Search(pkg string) {
 
 	for _, result := range aurResp.Results {
 		if result.Popularity <= 2.5 {
-			fmt.Println(Yellow + "==> " + Reset + White + result.Name + "@" + result.Version + " [" + result.Maintainer + "] " + "[ " + translations.Translate("low_popularity") + " ]\n--> " + result.Description)
+			fmt.Println(Yellow + "==> " + Reset + White + result.Name + "@" + result.Version + " [" + result.Maintainer + "] " + "[" + translations.Translate("low_popularity") + "]\n   --> " + result.Description)
 		}
 		fmt.Println(Green + "==> " + Reset + White + result.Name + "@" + result.Version + " [" + result.Maintainer + "]\n   --> " + result.Description)
 	}
