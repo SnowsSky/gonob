@@ -67,5 +67,8 @@ func Search(pkg string) {
 		}
 		fmt.Println(Green + "==> " + Reset + White + result.Name + "@" + result.Version + " [" + result.Maintainer + "]\n   --> " + result.Description)
 	}
+	if aurResp.ResultCount <= 0 {
+		fmt.Println(Yellow + "==> " + translations.Translate("warning_string") + " : " + Reset + White + fmt.Sprint(aurResp.ResultCount) + " " + translations.Translate("search_found") + " : " + pkg + Reset)
+	}
 	fmt.Println(Green + "==> " + Reset + White + fmt.Sprint(aurResp.ResultCount) + " " + translations.Translate("search_found") + " : " + pkg + Reset)
 }
