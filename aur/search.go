@@ -36,7 +36,7 @@ func InstallSearch(pkg string) (string, string, string, float64, error) {
 		return "", "", "", 0, fmt.Errorf(Red + "==> " + Reset + White + translations.Translate("error_string") + " : " + err.Error() + Reset)
 	}
 	if aurResp.ResultCount == 0 || len(aurResp.Results) == 0 {
-		return "", "", "", 0, fmt.Errorf(Red + "==> " + Reset + White + translations.Translate("error_string") + " : " + translations.Translate("unknown_aur_package") + Reset)
+		return "", "", "", 0, fmt.Errorf(Red + "==> " + Reset + White + translations.Translate("error_string") + " : " + pkg + " " + translations.Translate("unknown_aur_package") + Reset)
 	}
 
 	result := aurResp.Results[0]
