@@ -15,6 +15,7 @@ func parser(args []string) {
 		return
 	}
 	handle := wrapper.InitHandle()
+	defer (*handle).Release()
 	switch args[0] {
 	case "install", "-S":
 		if args[1] == "--aur" {
