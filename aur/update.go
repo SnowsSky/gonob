@@ -7,30 +7,26 @@ import (
 	alpm "github.com/Jguer/dyalpm"
 )
 
-func Update() {
+func Update(handle *alpm.Handle) {
 	AurPackages := []string{}
 
-	// Initialisation ALPM
-	handle, err := alpm.Initialize("/", "/var/lib/pacman")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer handle.Release()
-
-	// Base locale
-	localDB, err := handle.LocalDB()
+	localDB, err := (*handle).LocalDB()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// DB distantes
-	/*syncDBs, err := handle.SyncDBs()
+	syncDBs, err := (*handle).SyncDBs()
 	if err != nil {
 		log.Fatal(err)
-	}*/
+	}
 
 	for _, pkg := range localDB.PkgCache().Collect() {
-		fmt.Println(pkg.Name(), pkg.Reason())
+		for _, db := range syncDBs {
+			fmt.Printf("%s\n", db.Name())
+			if db.Pkg(pkg.Name()) == nil {
+				AurPackages = append(AurPackages, pkg.Name())
+			}
+		}
 	}
 	fmt.Println(AurPackages)
 

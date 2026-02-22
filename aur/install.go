@@ -29,15 +29,9 @@ func CheckPkgFolder() bool {
 	return true
 }
 
-func Read_db(pkg_name string) error {
-	handle, err := alpm.Initialize("/", "/var/lib/pacman")
-	if err != nil {
-		return err
-	}
-	defer handle.Release()
-
+func Read_db(pkg_name string, handle *alpm.Handle) error {
 	// Get local database
-	localDB, err := handle.LocalDB()
+	localDB, err := (*handle).LocalDB()
 	if err != nil {
 		return err
 	}
@@ -50,14 +44,14 @@ func Read_db(pkg_name string) error {
 	return nil
 }
 
-func Install(pkgs []string) {
+func Install(pkgs []string, handle *alpm.Handle) {
 	for i, pkg := range pkgs {
 		pkg_name, pkg_version, pkg_maintainer, pkg_popularity, err := InstallSearch(pkg)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		err = Read_db(pkg_name)
+		err = Read_db(pkg_name, handle)
 		if err != nil {
 			fmt.Println(Green + "==> " + Reset + White + translations.Translate("installing") + " [" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
 		} else {
