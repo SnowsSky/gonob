@@ -11,5 +11,6 @@ func InitHandle() *alpm.Handle {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	return &handle
 }

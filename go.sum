@@ -1,4 +1,6 @@
 github.com/Jguer/dyalpm v0.1.1 h1:38JkmJuHIGXVZedXIDGz/nhVcn8DtMk4zM+GRGipC7w=
 github.com/Jguer/dyalpm v0.1.1/go.mod h1:eUPJQ/zSclJKTxOPihpspulI+S8WQNsxHJoIBiBgogw=
+github.com/Morganamilo/go-pacmanconf v0.0.0-20210502114700-cff030e927a5 h1:TMscPjkb1ThXN32LuFY5bEYIcXZx3YlwzhS1GxNpn/c=
+github.com/Morganamilo/go-pacmanconf v0.0.0-20210502114700-cff030e927a5/go.mod h1:Hk55m330jNiwxRodIlMCvw5iEyoRUCIY64W1p9D+tHc=
 github.com/ebitengine/purego v0.9.1 h1:a/k2f2HQU3Pi399RPW1MOaZyhKJL9w/xFpKAg4q1s0A=
 github.com/ebitengine/purego v0.9.1/go.mod h1:iIjxzd6CiRiOG0UyXP+V1+jWqUXVjPKLAI0mRfJZTmQ=
