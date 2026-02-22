@@ -85,8 +85,8 @@ func Update(handle *alpm.Handle) {
 	if strings.ToLower(response) == "n" {
 		fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
 		return
+	} else {
+		Install(ToUpdate, handle, true)
 	}
-
-	Install(ToUpdate, handle, true)
 
 }
