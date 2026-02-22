@@ -18,6 +18,7 @@ type AurPackage struct {
 var response string
 
 func Update(handle *alpm.Handle) {
+	fmt.Println(Blue + "==> " + Reset + White + translations.Translate("fetch_aur_updates") + Reset)
 	AurPackages := []AurPackage{}
 	ToUpdate := []string{}
 
@@ -80,7 +81,7 @@ func Update(handle *alpm.Handle) {
 		return
 	}
 	fmt.Println(Yellow + "==> " + Reset + White + fmt.Sprint(AurUpdates) + " " + translations.Translate("aur_updates_available") + Reset)
-	fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [Y/n] " + Reset)
+	fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [y/n] " + Reset)
 	fmt.Scan(&response)
 	if strings.ToLower(response) == "n" {
 		fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)

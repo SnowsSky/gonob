@@ -62,7 +62,7 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 		if !noconfirm && pkg_popularity <= 2.5 {
 			var response string
 			fmt.Println(Yellow + "==> " + translations.Translate("warning_string") + " : " + Reset + White + translations.Translate("low_popularity") + Reset)
-			fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [Y/n] " + Reset)
+			fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [y/n] " + Reset)
 			fmt.Scan(&response)
 			if strings.ToLower(response) == "n" {
 				fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
