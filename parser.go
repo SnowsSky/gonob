@@ -19,7 +19,7 @@ func parser(args []string) {
 	switch args[0] {
 	case "install", "-S":
 		if args[1] == "--aur" {
-			aur.Install(args[2:], handle)
+			aur.Install(args[2:], handle, false)
 		}
 	case "--version", "-v":
 		fmt.Println(aur.White + "gonob@" + version + "\nhttps://github.com/SnowsSky/gonob" + aur.Reset)

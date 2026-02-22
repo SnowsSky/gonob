@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gonob/translations"
 	"log"
+	"strings"
 
 	alpm "github.com/Jguer/dyalpm"
 	pacmanconf "github.com/Morganamilo/go-pacmanconf"
@@ -14,8 +15,11 @@ type AurPackage struct {
 	Version string
 }
 
+var response string
+
 func Update(handle *alpm.Handle) {
 	AurPackages := []AurPackage{}
+	ToUpdate := []string{}
 
 	localDB, err := (*handle).LocalDB()
 	if err != nil {
@@ -59,15 +63,30 @@ func Update(handle *alpm.Handle) {
 		fmt.Println(Green + "==> " + translations.Translate("warning_string") + " : " + Reset + White + translations.Translate("no_aur_updates") + Reset)
 		return
 	}
+	AurUpdates := 0
 	for _, pkg := range AurPackages {
 		_, aur_version, _, _, err := InstallSearch(pkg.Name)
 		if err != nil {
-			fmt.Println(err)
 			continue
 		}
 		if aur_version != pkg.Version {
+			AurUpdates++
+			ToUpdate = append(ToUpdate, pkg.Name)
 			fmt.Println(Green + "==> " + Reset + White + pkg.Name + "@" + Reset + Yellow + pkg.Version + Reset + " --> " + Green + aur_version + Reset)
 		}
 	}
+	if AurUpdates == 0 {
+		fmt.Println(Green + "==> " + translations.Translate("warning_string") + " : " + Reset + White + translations.Translate("no_aur_updates") + Reset)
+		return
+	}
+	fmt.Println(Yellow + "==> " + Reset + White + fmt.Sprint(AurUpdates) + " " + translations.Translate("aur_updates_available") + Reset)
+	fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [Y/n] " + Reset)
+	fmt.Scan(&response)
+	if strings.ToLower(response) == "n" {
+		fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
+		return
+	}
+
+	Install(ToUpdate, handle, true)
 
 }

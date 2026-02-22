@@ -44,7 +44,7 @@ func Read_db(pkg_name string, handle *alpm.Handle) error {
 	return nil
 }
 
-func Install(pkgs []string, handle *alpm.Handle) {
+func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 	for i, pkg := range pkgs {
 		pkg_name, pkg_version, pkg_maintainer, pkg_popularity, err := InstallSearch(pkg)
 		if err != nil {
@@ -59,7 +59,7 @@ func Install(pkgs []string, handle *alpm.Handle) {
 
 		}
 		builddest = "/tmp/" + pkg_name
-		if pkg_popularity <= 2.5 {
+		if !noconfirm && pkg_popularity <= 2.5 {
 			var response string
 			fmt.Println(Yellow + "==> " + translations.Translate("warning_string") + " : " + Reset + White + translations.Translate("low_popularity") + Reset)
 			fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [Y/n] " + Reset)
