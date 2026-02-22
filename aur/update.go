@@ -17,10 +17,8 @@ type AurPackage struct {
 
 var response string
 
-func Update(handle *alpm.Handle) {
-	fmt.Println(Blue + "==> " + Reset + White + translations.Translate("fetch_aur_updates") + Reset)
+func DetectAURPackages(handle *alpm.Handle) []AurPackage {
 	AurPackages := []AurPackage{}
-	ToUpdate := []string{}
 
 	localDB, err := (*handle).LocalDB()
 	if err != nil {
@@ -29,15 +27,15 @@ func Update(handle *alpm.Handle) {
 
 	conf, _, err := pacmanconf.ParseFile("/etc/pacman.conf")
 	if err != nil {
-		fmt.Println(err)
-		return
+		fmt.Println(Red + "==> " + translations.Translate("error_string") + Reset + White + " : " + translations.Translate("aur_packages_fetch_error") + Reset)
+		return nil
 	}
 
 	for _, repo := range conf.Repos {
 		db, err := (*handle).RegisterSyncDB(repo.Name, 0)
 		if err != nil {
-			fmt.Println(err)
-			return
+			fmt.Println(Red + "==> " + translations.Translate("error_string") + Reset + White + " : " + translations.Translate("aur_packages_fetch_error") + Reset)
+			return nil
 		}
 		db.SetServers(repo.Servers)
 	}
@@ -60,6 +58,14 @@ func Update(handle *alpm.Handle) {
 			AurPackages = append(AurPackages, AurPackage{Name: pkg.Name(), Version: pkg.Version()})
 		}
 	}
+	return AurPackages
+}
+
+func Update(handle *alpm.Handle) {
+	fmt.Println(Blue + "==> " + Reset + White + translations.Translate("fetch_aur_updates") + Reset)
+	AurPackages := DetectAURPackages(handle)
+	ToUpdate := []string{}
+
 	if len(AurPackages) == 0 {
 		fmt.Println(Green + "==> " + translations.Translate("warning_string") + " : " + Reset + White + translations.Translate("no_aur_updates") + Reset)
 		return
