@@ -12,7 +12,7 @@
     "search_found": "Paquet(s) trouvé(s) pour",
     "fetch_aur_package_list": "Récupération de la liste des paquets de l'AUR...",
     "no_aur_updates": "Aucune Mise à jour AUR disponible.",
-    "aur_updates_available": "Mise(s) à jour AUR disponible(s) :",
+    "aur_updates_available": "Mise(s) à jour AUR disponible(s)",
     "installing": "Installation",
     "reinstalling": "Réinstallation",
     "build_success": "Le paquet a été construit avec succès.",
