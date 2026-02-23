@@ -7,6 +7,7 @@
     "aur_unreachable": "Impossible d'atteindre l'AUR. Merci de vérifier votre connexion internet.",
     "clone_error": "Une erreur est survenue lors du clonage du dépôt git.",
     "ask_to_read_pkgbuild": "Souhaitez-vous lire le PKGBUILD avant de continuer ?",
+    "press_any_key_to_continue": "Appuyez sur une touche pour continuer...",
     "build_error": "Une erreur est survenue lors de la construction du paquet.",
     "folder_already_exists": "Le dossier de construction existe déjà.",
     "low_popularity": "Ce paquet est peu populaire et peut donc probablement être indésirable.",

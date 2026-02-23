@@ -90,9 +90,12 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 			if strings.ToLower(response) == "n" {
 				continue
 			} else {
-				// Open the PKGBUILD file in the default editor
+				// Open the PKGBUILD file in the default editor and make the program wait until the editor is closed
 				cmd := exec.Command("xdg-open", builddest+"/PKGBUILD")
 				err = cmd.Run()
+				fmt.Print(White + "==> " + translations.Translate("press_any_key_to_continue") + " " + Reset)
+				fmt.Scan(&response)
+
 			}
 		}
 
