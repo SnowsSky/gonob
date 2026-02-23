@@ -53,9 +53,9 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 		}
 		err = Read_db(pkg_name, handle)
 		if err != nil {
-			fmt.Println(Green + "==> " + Reset + White + translations.Translate("installing") + " [" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
-		} else {
 			fmt.Println(Green + "==> " + Reset + White + translations.Translate("reinstalling") + " [" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
+		} else {
+			fmt.Println(Green + "==> " + Reset + White + translations.Translate("installing") + " [" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
 
 		}
 		builddest = "/tmp/" + pkg_name
