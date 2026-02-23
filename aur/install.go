@@ -84,6 +84,17 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 		} else {
 			fmt.Println(Yellow + "==> " + translations.Translate("warning_string") + " : " + Reset + White + translations.Translate("folder_already_exists") + Reset)
 		}
+		if !noconfirm {
+			fmt.Print(White + "==> " + translations.Translate("ask_to_read_pkgbuild") + " [y/n] " + Reset)
+			fmt.Scan(&response)
+			if strings.ToLower(response) == "n" {
+				continue
+			} else {
+				// Open the PKGBUILD file in the default editor
+				cmd := exec.Command("xdg-open", builddest+"/PKGBUILD")
+				err = cmd.Run()
+			}
+		}
 
 		cmd := exec.Command("makepkg", "-si", "--noconfirm")
 		cmd.Dir = builddest
