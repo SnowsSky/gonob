@@ -24,7 +24,7 @@ func List(handle *alpm.Handle) {
 	}
 	fmt.Println(Green + "==> " + Reset + White + fmt.Sprint(len(AurPackages)) + " " + translations.Translate("aur_packages") + Reset)
 	for _, pkg := range UnknownPackages {
-		fmt.Println(Green + "--> " + Reset + White + pkg.Name + "@" + pkg.Version + Reset)
+		fmt.Println(Yellow + "--> " + Reset + White + pkg.Name + "@" + pkg.Version + Reset)
 	}
-	fmt.Println(Green + "==> " + Reset + White + fmt.Sprint(len(UnknownPackages)) + " " + translations.Translate("unknown_package_source") + Reset)
+	fmt.Println(Yellow + "==> " + Reset + White + fmt.Sprint(len(UnknownPackages)) + " " + translations.Translate("unknown_package_source") + Reset)
 }
