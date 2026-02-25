@@ -19,6 +19,7 @@
     "aur_packages_fetch_error": "Une erreur est survenue lors de la récupération de la liste des paquets de l'AUR.",
     "no_aur_updates": "Aucune Mise à jour AUR disponible.",
     "aur_updates_available": "Mise(s) à jour AUR disponible(s)",
+    "get_aur_package_list_error": "Une erreur est survenue lors de la récupération de la liste des paquets de l'AUR.",
     "installing": "Installation",
     "reinstalling": "Réinstallation",
     "build_success": "Le paquet a été construit avec succès.",

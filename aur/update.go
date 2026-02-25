@@ -17,7 +17,7 @@ type AurPackage struct {
 
 var response string
 
-func DetectAURPackages(handle *alpm.Handle) []AurPackage {
+func DetectNonOfficialPackages(handle *alpm.Handle) []AurPackage {
 	AurPackages := []AurPackage{}
 
 	localDB, err := (*handle).LocalDB()
@@ -63,7 +63,7 @@ func DetectAURPackages(handle *alpm.Handle) []AurPackage {
 
 func Update(handle *alpm.Handle) {
 	fmt.Println(Blue + "==> " + Reset + White + translations.Translate("fetch_aur_updates") + Reset)
-	AurPackages := DetectAURPackages(handle)
+	AurPackages := DetectNonOfficialPackages(handle)
 	ToUpdate := []string{}
 
 	if len(AurPackages) == 0 {
