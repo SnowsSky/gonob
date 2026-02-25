@@ -105,7 +105,7 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 		cmd.Stderr = os.Stderr
 		err = cmd.Run()
 		if err != nil {
-			fmt.Println(Red + "==> " + translations.Translate("error_string") + Reset + White + translations.Translate("build_error") + Reset)
+			fmt.Println(Red + "==> " + translations.Translate("error_string") + Reset + White + " " + translations.Translate("build_error") + Reset)
 			return
 		}
 		fmt.Println(Green + "==> " + Reset + White + translations.Translate("build_success") + Reset)

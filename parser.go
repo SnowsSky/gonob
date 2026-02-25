@@ -7,7 +7,7 @@ import (
 	"gonob/wrapper"
 )
 
-var version = "1.0.0-dev-14"
+var version = "1.0.0-dev-15"
 
 func parser(args []string) {
 	if len(args) == 0 {
