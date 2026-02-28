@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	alpm "github.com/Jguer/dyalpm"
-	pacmanconf "github.com/Morganamilo/go-pacmanconf"
 )
 
 type AurPackage struct {
@@ -17,30 +16,10 @@ type AurPackage struct {
 
 var response string
 
-func DetectNonOfficialPackages(handle *alpm.Handle) []AurPackage {
+func DetectNonOfficialPackages(handle *alpm.Handle, syncDBs []alpm.Database) []AurPackage {
 	AurPackages := []AurPackage{}
 
 	localDB, err := (*handle).LocalDB()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	conf, _, err := pacmanconf.ParseFile("/etc/pacman.conf")
-	if err != nil {
-		fmt.Println(Red + "==> " + translations.Translate("error_string") + Reset + White + " : " + translations.Translate("aur_packages_fetch_error") + Reset)
-		return nil
-	}
-
-	for _, repo := range conf.Repos {
-		db, err := (*handle).RegisterSyncDB(repo.Name, 0)
-		if err != nil {
-			fmt.Println(Red + "==> " + translations.Translate("error_string") + Reset + White + " : " + translations.Translate("aur_packages_fetch_error") + Reset)
-			return nil
-		}
-		db.SetServers(repo.Servers)
-	}
-
-	syncDBs, err := (*handle).SyncDBs()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -61,9 +40,9 @@ func DetectNonOfficialPackages(handle *alpm.Handle) []AurPackage {
 	return AurPackages
 }
 
-func Update(handle *alpm.Handle) {
+func Update(handle *alpm.Handle, syncDBs []alpm.Database, noconfirm bool) {
 	fmt.Println(Blue + "==> " + Reset + White + translations.Translate("fetch_aur_updates") + Reset)
-	AurPackages := DetectNonOfficialPackages(handle)
+	AurPackages := DetectNonOfficialPackages(handle, syncDBs)
 	ToUpdate := []string{}
 
 	if len(AurPackages) == 0 {
@@ -87,11 +66,15 @@ func Update(handle *alpm.Handle) {
 		return
 	}
 	fmt.Println(Yellow + "==> " + Reset + White + fmt.Sprint(AurUpdates) + " " + translations.Translate("aur_updates_available") + Reset)
-	fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [y/n] " + Reset)
-	fmt.Scan(&response)
-	if strings.ToLower(response) == "n" {
-		fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
-		return
+	if !noconfirm {
+		fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [y/n] " + Reset)
+		fmt.Scan(&response)
+		if strings.ToLower(response) == "n" {
+			fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
+			return
+		} else {
+			Install(ToUpdate, handle, true)
+		}
 	} else {
 		Install(ToUpdate, handle, true)
 	}

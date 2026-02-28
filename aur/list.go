@@ -42,8 +42,8 @@ func GetAurPackagesList() {
 	}
 }
 
-func List(handle *alpm.Handle) {
-	Packages := DetectNonOfficialPackages(handle)
+func List(handle *alpm.Handle, syncDBs []alpm.Database) {
+	Packages := DetectNonOfficialPackages(handle, syncDBs)
 	UnknownPackages, AurPackages := FilterPackages(Packages)
 	for _, pkg := range AurPackages {
 		fmt.Println(Green + "--> " + Reset + White + pkg.Name + "@" + pkg.Version + Reset)
@@ -52,7 +52,10 @@ func List(handle *alpm.Handle) {
 	for _, pkg := range UnknownPackages {
 		fmt.Println(Yellow + "--> " + Reset + White + pkg.Name + "@" + pkg.Version + Reset)
 	}
-	fmt.Println(Yellow + "==> " + Reset + White + fmt.Sprint(len(UnknownPackages)) + " " + translations.Translate("unknown_package_source") + Reset)
+	if len(UnknownPackages) >= 1 {
+		fmt.Println(Yellow + "==> " + Reset + White + fmt.Sprint(len(UnknownPackages)) + " " + translations.Translate("unknown_package_source") + Reset)
+	}
+
 }
 
 func FilterPackages(pkgs []AurPackage) ([]AurPackage, []AurPackage) {

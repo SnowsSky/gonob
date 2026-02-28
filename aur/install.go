@@ -3,6 +3,7 @@ package aur
 import (
 	"fmt"
 	"gonob/translations"
+	"gonob/wrapper"
 	"os"
 	"os/exec"
 	"strings"
@@ -29,21 +30,6 @@ func CheckPkgFolder() bool {
 	return true
 }
 
-func Read_db(pkg_name string, handle *alpm.Handle) error {
-	// Get local database
-	localDB, err := (*handle).LocalDB()
-	if err != nil {
-		return err
-	}
-
-	// Get a package
-	pkg := localDB.Pkg(pkg_name)
-	if pkg == nil {
-		return err
-	}
-	return nil
-}
-
 func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 	for i, pkg := range pkgs {
 		pkg_name, pkg_version, pkg_maintainer, pkg_popularity, err := InstallSearch(pkg)
@@ -51,7 +37,7 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 			fmt.Println(err)
 			return
 		}
-		err = Read_db(pkg_name, handle)
+		_, err = wrapper.SearchPackage(pkg_name, handle)
 		if err != nil {
 			fmt.Println(Green + "==> " + Reset + White + translations.Translate("reinstalling") + " [" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
 		} else {
@@ -79,7 +65,7 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 
 			err = cmd.Run()
 			if err != nil {
-				fmt.Println(Red + "==> " + translations.Translate("error_string") + Reset + White + translations.Translate("clone_error") + Reset)
+				fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("clone_error") + Reset)
 			}
 		} else {
 			fmt.Println(Yellow + "==> " + translations.Translate("warning_string") + " : " + Reset + White + translations.Translate("folder_already_exists") + Reset)
@@ -87,15 +73,12 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 		if !noconfirm {
 			fmt.Print(White + "==> " + translations.Translate("ask_to_read_pkgbuild") + " [y/n] " + Reset)
 			fmt.Scan(&response)
-			if strings.ToLower(response) == "n" {
-				continue
-			} else {
+			if strings.ToLower(response) != "n" {
 				// Open the PKGBUILD file in the default editor and make the program wait until the editor is closed
 				cmd := exec.Command("xdg-open", builddest+"/PKGBUILD")
 				err = cmd.Run()
-				fmt.Print(White + "==> " + translations.Translate("press_any_key_to_continue") + " " + Reset)
+				fmt.Print(White + "==> " + translations.Translate("press_any_key_to_continue") + " : " + Reset)
 				fmt.Scan(&response)
-
 			}
 		}
 
