@@ -6,6 +6,7 @@ import (
 	"gonob/wrapper"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	alpm "github.com/Jguer/dyalpm"
@@ -44,6 +45,7 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 			fmt.Println(Green + "==> " + Reset + White + translations.Translate("installing") + " [" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
 
 		}
+
 		builddest = "/tmp/" + pkg_name
 		if !noconfirm && pkg_popularity <= 2.5 {
 			var response string
@@ -82,7 +84,7 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 			}
 		}
 
-		cmd := exec.Command("makepkg", "-si", "--noconfirm")
+		cmd := exec.Command("makepkg", "-s", "-f", "--noconfirm")
 		cmd.Dir = builddest
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
@@ -92,5 +94,33 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 			return
 		}
 		fmt.Println(Green + "==> " + Reset + White + translations.Translate("build_success") + Reset)
+
+		var pkgPath string
+		files, err := os.ReadDir(builddest)
+		if err != nil {
+			fmt.Println(Red + "==> " + translations.Translate("error_string") + Reset + White + " " + translations.Translate("build_error") + Reset)
+			return
+		}
+		for _, f := range files {
+			name := f.Name()
+
+			if strings.HasPrefix(name, pkg_name+"-") &&
+				strings.HasSuffix(name, ".pkg.tar.zst") &&
+				!strings.Contains(name, "-debug-") {
+				pkgPath = filepath.Join(builddest, name)
+				break
+			}
+		}
+		cmd = exec.Command("sudo", "gonob", "-U", "--noconfirm", pkgPath)
+		cmd.Dir = builddest
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		err = cmd.Run()
+		if err != nil {
+			fmt.Println(Red + "==> " + translations.Translate("error_string") + Reset + White + " " + translations.Translate("build_error") + Reset)
+			return
+		}
+
 	}
+
 }

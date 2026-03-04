@@ -31,25 +31,29 @@ func ProgressBarCallback(progress int32, pkg string, percent int, howmany uint64
 	}
 }
 
-func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string) {
-	for i, pkg := range packages {
+func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noconfirm bool) {
+	for _, pkg := range packages {
 		pkgInfo, err := SearchPackage(pkg, handle)
 		if pkgInfo == nil || err != nil {
 			// package is not installed.
 			fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("package_not_installed") + Reset)
 			return
 		}
+		if syncpkg, _ := SearchOnSyncDatabases(pkg, handle, syncDBs); syncpkg != nil {
+			if syncpkg.DB().Name() == "core" {
+				fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("can't_remove_core_packages") + Reset)
+				return
+			}
+		}
+
 		pkgInfos = append(pkgInfos, pkgInfo)
-		pkgSizeMiB := float64(pkgInfo.ISize()) / (1024 * 1024)
-		TotalSizeBytes += float64(pkgInfo.ISize())
-		TotalSizeMiB = float64(TotalSizeBytes) / (1024 * 1024)
-		fmt.Println(Blue + "(" + fmt.Sprintf("%d", i+1) + ") " + "--> " + Reset + White + pkg + " (" + fmt.Sprintf("%.2f", pkgSizeMiB) + " MiB)" + Reset)
+
 	}
-	fmt.Println(White + "==> " + fmt.Sprint(len(packages)) + " " + translations.Translate("len_packages_to_remove") + "." + Reset)
 
 	trans := alpm.NewTransaction(*handle)
 
-	err := trans.Init(0)
+	flags := alpm.TransFlagRecurse | alpm.TransFlagNoSave
+	err := trans.Init(flags)
 	if err != nil {
 		if CheckLock() {
 			fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("lock_file_found") + Reset)
@@ -68,39 +72,34 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string) {
 		}
 	}
 
-	DepsToRemove, err := trans.Prepare()
+	_, err = trans.Prepare()
 	if err != nil {
 		log.Fatal(err)
 		trans.Release()
-	}
-
-	for _, dep := range DepsToRemove {
-		fmt.Println(Green+"==> "+translations.Translate("dep_to_remove")+" : "+dep.GetDepend().GetName(), dep.GetDepend().GetVersion())
-		depPkg := dep.GetDepend()
-		pkgInfo, err := SearchPackage(depPkg.GetName(), handle)
-		if pkgInfo == nil || err != nil {
-			// package is not installed.
-			trans.Release()
-			fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("package_not_installed") + Reset)
-			return
-		}
-		depSizeMiB := float64(pkgInfo.ISize()) / (1024 * 1024)
-		fmt.Printf("    - %s %s (%.2f MiB)\n", depPkg.GetName(), depPkg.GetVersion(), depSizeMiB)
-		TotalSizeBytes += float64(pkgInfo.ISize())
-	}
-
-	fmt.Println(Blue + "==> " + translations.Translate("size_to_remove") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB")
-
-	var response string
-	fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [y/n] " + Reset)
-	fmt.Scan(&response)
-	if strings.ToLower(response) == "n" {
-		fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
-		trans.Release()
 		return
 	}
-	//fmt.Println(Green + "==> " + Reset + White + translations.Translate("removing") + " [" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(packages)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg + "..." + Reset)
 
+	DepsToRemove, err := trans.GetRemove()
+
+	for i, pkg := range DepsToRemove {
+		pkgSizeMiB := float64(pkg.ISize()) / (1024 * 1024)
+		TotalSizeBytes += float64(pkg.ISize())
+		TotalSizeMiB = float64(TotalSizeBytes) / (1024 * 1024)
+		fmt.Println(Blue + "(" + fmt.Sprintf("%d", i+1) + ") " + "--> " + Reset + White + pkg.Name() + " (" + fmt.Sprintf("%.2f", pkgSizeMiB) + " MiB)" + Reset)
+	}
+	fmt.Println(White + "==> " + fmt.Sprint(len(packages)) + " " + translations.Translate("len_packages_to_remove") + "." + Reset)
+	fmt.Println(Blue + "==> " + translations.Translate("size_to_remove") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB")
+	var response string
+	if !noconfirm {
+
+		fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [y/n] " + Reset)
+		fmt.Scan(&response)
+		if strings.ToLower(response) == "n" {
+			fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
+			trans.Release()
+			return
+		}
+	}
 	// Commit the transaction
 	conflicts, err := trans.Commit()
 	if err != nil {
@@ -113,13 +112,15 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string) {
 		return
 	}
 	fmt.Println(Green + "==> " + Reset + White + translations.Translate("sucess") + Reset)
-	fmt.Print(White + "==> " + translations.Translate("ask_to_read_alpm_log") + " [y/n] " + Reset)
-	fmt.Scan(&response)
-	if strings.ToLower(response) == "n" {
-		return
+	if !noconfirm {
+		fmt.Print(White + "==> " + translations.Translate("ask_to_read_alpm_log") + " [y/n] " + Reset)
+		fmt.Scan(&response)
+		if strings.ToLower(response) == "n" {
+			return
+		}
+		// Open the log file in the default editor and make the program wait until the editor is closed
+		cmd := exec.Command("xdg-open", "/tmp/alpm.log")
+		err = cmd.Run()
 	}
-	// Open the log file in the default editor and make the program wait until the editor is closed
-	cmd := exec.Command("xdg-open", "/tmp/alpm.log")
-	err = cmd.Run()
 
 }

@@ -16,3 +16,17 @@ func SearchPackage(pkg_name string, handle *alpm.Handle) (alpm.Package, error) {
 	}
 	return pkg, nil
 }
+
+var found bool
+
+func SearchOnSyncDatabases(pkg_name string, handle *alpm.Handle, syncDBs []alpm.Database) (alpm.Package, error) {
+	for _, db := range syncDBs {
+		pkg := db.Pkg(pkg_name)
+		if pkg != nil {
+			found = true
+			return pkg, nil
+		}
+	}
+	return nil, nil
+
+}
