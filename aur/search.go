@@ -65,7 +65,7 @@ func Search(pkg string) {
 		if result.Popularity <= 2.5 {
 			fmt.Println(Yellow + "==> " + Reset + White + result.Name + "@" + result.Version + " [" + result.Maintainer + "] " + "[" + translations.Translate("low_popularity") + "]\n   --> " + result.Description)
 		}
-		fmt.Println(Green + "==> " + Reset + White + result.Name + "@" + result.Version + " [" + result.Maintainer + "]\n   --> " + result.Description)
+		fmt.Println(Green + "==> " + Reset + White + result.Name + "@" + result.Version + " [" + result.Maintainer + "]" + "\n   --> " + result.Description)
 	}
 	if aurResp.ResultCount <= 0 {
 		fmt.Println(Yellow + "==> " + translations.Translate("warning_string") + " : " + Reset + White + fmt.Sprint(aurResp.ResultCount) + " " + translations.Translate("search_found") + " : " + pkg + Reset)

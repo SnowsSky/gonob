@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-var version = "1.0.1"
+var version = "1.1.0-dev-1"
 
 func parser(args []string) {
 	if len(args) == 0 {
@@ -25,6 +25,13 @@ func parser(args []string) {
 				fmt.Println(aur.Red + "==> " + translations.Translate("warning_string") + " : " + translations.Translate("need_sudo_privileges") + aur.Reset)
 				return
 			}
+		}
+	}
+
+	if len(args) > 1 {
+		if args[1] == "--aur" && os.Geteuid() == 0 {
+			fmt.Println(aur.Red + "==> " + translations.Translate("warning_string") + " : " + translations.Translate("don't_use_sudo") + aur.Reset)
+			return
 		}
 	}
 
@@ -55,7 +62,9 @@ func parser(args []string) {
 				aur.Search(args[2])
 				return
 			}
+			wrapper.Search(args[1], handle, syncDBs)
 		}
+
 	case "upgrade", "-Syu":
 		if len(args) > 1 {
 			if args[1] == "--aur" {
@@ -96,8 +105,10 @@ func parser(args []string) {
 			}
 		}
 		wrapper.Local_Install(handle, args[1:], false)
+	case "release_notes":
+		Release_note()
 	case "--help", "-h":
-		fmt.Println("Usage: gonob [command] [options]\n\nCommands:\n  install, -S      Install a package\n  local_install, -U      Install a local package\n  remove, -R		Remove a package\n  search, -Ss      Search for a package\n  list, -Q         List installed packages\n  upgrade, -Syu    Upgrade all packages\n  --version, -v    Show version information\n  --help, -h       Show this help message\n\nOptions:\n  --aur            Assume that your query is from the AUR.\n  --noconfirm            Assume that the response of all confirmation messages are 'yes'.")
+		fmt.Println("Usage: gonob [command] [options]\n\nCommands:\n  install, -S      Install a package\n  local_install, -U      Install a local package\n  remove, -R		Remove a package\n  search, -Ss      Search for a package\n  list, -Q         List installed packages\n  upgrade, -Syu    Upgrade all packages\n  release_notes    See the releases notes for gonob\n  --version, -v    Show version information\n  --help, -h       Show this help message\n\nOptions:\n  --aur            Assume that your query is from the AUR.\n  --noconfirm            Assume that the response of all confirmation messages are 'yes'.")
 	default:
 		fmt.Println(aur.Yellow + "==> " + translations.Translate("warning_string") + " : " + translations.Translate("unknown_command") + aur.Reset)
 	}

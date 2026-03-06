@@ -19,7 +19,9 @@ func ProgressBarCallback(progress int32, pkg string, percent int, howmany uint64
 	filled := int(float64(percent) / 100.0 * float64(barLen))
 
 	bar := ""
-	if filled > 0 {
+	if filled == barLen {
+		bar = strings.Repeat("=", barLen)
+	} else if filled > 0 {
 		bar += strings.Repeat("=", filled-1)
 		bar += ">"
 	}

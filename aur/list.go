@@ -71,7 +71,12 @@ func FilterPackages(pkgs []AurPackage) ([]AurPackage, []AurPackage) {
 		if strings.Contains(content, pkg.Name) {
 			AurPackages = append(AurPackages, AurPackage{Name: pkg.Name, Version: pkg.Version})
 		} else {
-			UnknownPackages = append(UnknownPackages, AurPackage{Name: pkg.Name, Version: pkg.Version})
+			if !strings.Contains(pkg.Name, "-debug") {
+				UnknownPackages = append(UnknownPackages, AurPackage{Name: pkg.Name, Version: pkg.Version})
+			} else {
+				AurPackages = append(AurPackages, AurPackage{Name: pkg.Name, Version: pkg.Version})
+			}
+
 		}
 	}
 	return UnknownPackages, AurPackages

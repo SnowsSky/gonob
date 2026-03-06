@@ -24,7 +24,7 @@ func Local_Install(handle *alpm.Handle, packages []string, noconfirm bool) {
 	defer trans.Release()
 
 	for _, pkg := range packages {
-		toadd, err := (*handle).LoadPackage(pkg, false, 0)
+		toadd, err := (*handle).LoadPackage(pkg, true, 0)
 		if err != nil {
 			fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("failed_to_get_local_package") + Reset)
 			return
@@ -59,7 +59,7 @@ func Local_Install(handle *alpm.Handle, packages []string, noconfirm bool) {
 		fmt.Println(Blue + "(" + fmt.Sprintf("%d", i+1) + ") " + "--> " + Reset + Green + "local" + ":" + Reset + White + pkg.Name() + " (" + fmt.Sprintf("%.2f", pkgSizeMiB) + " MiB)" + Reset)
 	}
 	fmt.Println(White + "==> " + fmt.Sprint(len(pkgs)) + " " + translations.Translate("len_packages_to_add") + "." + Reset)
-	fmt.Println(Blue + "==> " + translations.Translate("size_to_add") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB")
+	fmt.Println(Blue + "==> " + translations.Translate("size_to_add") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB" + Reset)
 	var response string
 	if !noconfirm {
 		fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [y/n] " + Reset)

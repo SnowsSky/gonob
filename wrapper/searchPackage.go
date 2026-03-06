@@ -1,6 +1,11 @@
 package wrapper
 
-import alpm "github.com/Jguer/dyalpm"
+import (
+	"fmt"
+	"gonob/translations"
+
+	alpm "github.com/Jguer/dyalpm"
+)
 
 func SearchPackage(pkg_name string, handle *alpm.Handle) (alpm.Package, error) {
 	// Get local database
@@ -15,6 +20,15 @@ func SearchPackage(pkg_name string, handle *alpm.Handle) (alpm.Package, error) {
 		return nil, err
 	}
 	return pkg, nil
+}
+
+func Search(pkg_name string, handle *alpm.Handle, syncDBs []alpm.Database) {
+	pkg, _ := SearchOnSyncDatabases(pkg_name, handle, syncDBs)
+	if pkg == nil {
+		fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("unknown_package") + Reset)
+		return
+	}
+	fmt.Println(Green + "==> " + Reset + Green + pkg.DB().Name() + Reset + White + ":" + pkg.Name() + "@" + pkg.Version() + "-" + pkg.Architecture() + "\n" + pkg.Description() + Reset)
 }
 
 var found bool

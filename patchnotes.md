@@ -1,9 +1,9 @@
-# gonob 1.0.0-dev-16
+- gonob 1.0.0-dev-16
 -> Bug Fixes, added --noconfirm.
 -> added remove.go
 -> Added alpm logfile & more.
 
-#gonob 1.0.0 
+- gonob 1.0.0 
 -> Bug fixes
 -> Added install.go
 -> Better remove func + Added --noconfirm opt
@@ -12,3 +12,12 @@
 -> Fixed lock issues
 -> gonob install --aur now use gonob -U instead of pacman -U
 -> Added install.sh script
+
+- gonob 1.1.0-dev-1
+-> by now, You can't launch AUR commands with sudo.
+-> Fixed + Improvements to the download bar
+-> the packages with "-debug" won't shows up anymore on `gonob list --aur` as a unknown package.
+-> Added `gonob -Ss` for official packages.
+-> Fixed the colors issues on local-install
+-> Added `gonob release_notes` to see release note of the version
+-> Improved translate.go (Loading files in mem instead of reading every time)

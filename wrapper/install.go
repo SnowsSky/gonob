@@ -27,7 +27,9 @@ func InstallProgressCallback(progress int32, pkg string, percent int, howmany ui
 	filled := int(float64(percent) / 100.0 * float64(barLen))
 
 	bar := ""
-	if filled > 0 {
+	if filled == barLen {
+		bar = strings.Repeat("=", barLen)
+	} else if filled > 0 {
 		bar += strings.Repeat("=", filled-1)
 		bar += ">"
 	}
@@ -43,9 +45,11 @@ func DownloadProgressCallback(ev dyalpm.DownloadEvent) {
 	switch ev.Type {
 	case dyalpm.DownloadProgress:
 		data := ev.Data.(dyalpm.DownloadProgressData)
-		fmt.Printf("\r%s : %s (%dB/%dB)", string(translations.Translate("downloading")), ev.Filename, data.Downloaded, data.Total)
+		percent := float64(data.Downloaded) / float64(data.Total) * 100
+		fmt.Printf("\r%s : %s (%.1f%%)", translations.Translate("downloading"), ev.Filename, percent)
+
 	case dyalpm.DownloadCompleted:
-		fmt.Printf("\r%s : %s (100%%)", translations.Translate("downloading"), ev.Filename)
+		fmt.Printf("\r%s : %s (100%%)\n", translations.Translate("downloading"), ev.Filename)
 	}
 }
 func Install(handle *alpm.Handle, syncDBs []alpm.Database, packages []string) {
@@ -72,7 +76,6 @@ func Install(handle *alpm.Handle, syncDBs []alpm.Database, packages []string) {
 	(*handle).SetDownloadCallbackFunc(DownloadProgressCallback)
 	(*handle).SetProgressCallbackFunc(InstallProgressCallback)
 	defer trans.Release()
-
 	for _, pkg := range pkgInfos {
 		err = trans.AddPkg(pkg)
 		if err != nil {

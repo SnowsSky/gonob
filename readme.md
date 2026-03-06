@@ -16,4 +16,5 @@ gonob is disponible on :
         - To remove a package, run `gonob remove / -R <packages>`
         - To find a package from the aur, run `gonob search / -Ss --aur <package>`
         - To find a package from the localDB, run `gonob list / -Q | grep <package>`
+        - To find a package from the official DBs, run `gonob search / -Ss <package>`
         - To check how many aur packages you have installed, run `gonob list / -Q --aur`

@@ -7,28 +7,51 @@ import (
 	"strings"
 )
 
+var data map[string]string
+
 func Translate(translation_type string) string {
 	locale := os.Getenv("LANG")
 	locale = strings.Split(locale, ".")[0]
-
-	file, err := os.ReadFile("/etc/gonob/translations/" + locale + ".json")
-	if err != nil {
-		fmt.Sprintf("Missing translation file: %s. Using default translation", locale)
-		file, err = os.ReadFile("/etc/gonob/translations/us_US.json")
+	if len(data) <= 0 {
+		file, err := os.ReadFile("/etc/gonob/translations/" + locale + ".json")
 		if err != nil {
-			return fmt.Sprintf("Missing translation file: %s.", locale)
+			file, err = os.ReadFile("/etc/gonob/translations/us_US.json")
+			if err != nil {
+				fmt.Println("Translations files at /etc/gonob/translations have been corrupted / deleted.\nPlease consider reinstalling gonob.")
+				os.Exit(1)
+				return ""
+			}
 		}
-	}
 
-	var data map[string]string
-	if err := json.Unmarshal(file, &data); err != nil {
-		return "Invalid translation file"
+		if err := json.Unmarshal(file, &data); err != nil {
+			fmt.Println("Translations files at /etc/gonob/translations have been corrupted / deleted.\nPlease consider reinstalling gonob.")
+			os.Exit(1)
+			return ""
+		}
 	}
 
 	value, ok := data[translation_type]
 
 	if !ok {
-		return fmt.Sprintf("Missing translation key: %s", translation_type)
+		file, err := os.ReadFile("/etc/gonob/translations/us_US.json")
+		if err != nil {
+			fmt.Println("Translations files at /etc/gonob/translations have been corrupted / deleted.\nPlease consider reinstalling gonob.")
+			os.Exit(1)
+			return ""
+		}
+
+		if err := json.Unmarshal(file, &data); err != nil {
+			fmt.Println("Translations files at /etc/gonob/translations have been corrupted / deleted.\nPlease consider reinstalling gonob.")
+			os.Exit(1)
+			return ""
+		}
+		value, ok := data[translation_type]
+		if !ok {
+			fmt.Println("Translations files at /etc/gonob/translations have been corrupted / deleted.\nPlease consider reinstalling gonob.")
+			return ""
+		}
+
+		return value
 	}
 
 	return value
