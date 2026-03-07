@@ -21,3 +21,14 @@
 -> Fixed the colors issues on local-install
 -> Added `gonob release_notes` to see release note of the version
 -> Improved translate.go (Loading files in mem instead of reading every time)
+
+- gonob 1.1.0
+-> by now, You can't launch AUR commands with sudo.
+-> Fixed + Improvements to the download bar
+-> the packages with "-debug" won't shows up anymore on `gonob list --aur` as a unknown package.
+-> Added `gonob -Ss` for official packages.
+-> Fixed the colors issues on local-install
+-> Added `gonob release_notes` to see release note of the version
+-> Improved translate.go (Loading files in mem instead of reading every time)
+-> added release link on `gonob release_notes`.
+-> go-git for git usage.

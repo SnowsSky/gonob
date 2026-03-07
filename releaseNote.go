@@ -22,7 +22,7 @@ func Release_note() {
 
 	var result strings.Builder
 	capture := false
-	fmt.Println("- gonob " + version)
+	fmt.Println(aur.White + "- gonob " + version + aur.Reset)
 	for scanner.Scan() {
 		line := scanner.Text()
 		if strings.HasPrefix(line, "- gonob") {
@@ -40,4 +40,5 @@ func Release_note() {
 	}
 	content := result.String()
 	fmt.Println(content)
+	fmt.Println(aur.White + "https://raw.githubusercontent.com/SnowsSky/gonob/main/patchnotes.md" + aur.Reset)
 }

@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	alpm "github.com/Jguer/dyalpm"
+	git "github.com/go-git/go-git/v6"
 )
 
 var Reset = "\033[0m"
@@ -60,14 +61,13 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 		fmt.Println(pkg_name, pkg_version, pkg_maintainer, pkg_popularity)
 
 		if !CheckPkgFolder() {
-			cmd := exec.Command("git", "clone", fmt.Sprintf("https://aur.archlinux.org/%s.git", pkg_name), "/tmp/"+pkg_name)
-
-			cmd.Stdout = os.Stdout
-			cmd.Stderr = os.Stderr
-
-			err = cmd.Run()
+			// Clone the given repository to the given directory
+			_, err := git.PlainClone(builddest, &git.CloneOptions{
+				URL:      fmt.Sprintf("https://aur.archlinux.org/%s.git", pkg_name),
+				Progress: os.Stdout,
+			})
 			if err != nil {
-				fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("clone_error") + Reset)
+				fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("clone_error") + fmt.Sprintf("\n %s", err) + Reset)
 			}
 		} else {
 			fmt.Println(Yellow + "==> " + translations.Translate("warning_string") + " : " + Reset + White + translations.Translate("folder_already_exists") + Reset)

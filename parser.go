@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-var version = "1.1.0-dev-1"
+var version = "1.1.0"
 
 func parser(args []string) {
 	if len(args) == 0 {
