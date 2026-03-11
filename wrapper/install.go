@@ -52,7 +52,7 @@ func DownloadProgressCallback(ev dyalpm.DownloadEvent) {
 		fmt.Printf("\r%s : %s (100%%)\n", translations.Translate("downloading"), ev.Filename)
 	}
 }
-func Install(handle *alpm.Handle, syncDBs []alpm.Database, packages []string) {
+func Install(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noconfirm bool) {
 	for _, pkg := range packages {
 		pkgInfo, err := SearchOnSyncDatabases(pkg, handle, syncDBs)
 		if pkgInfo == nil || err != nil {
@@ -103,15 +103,18 @@ func Install(handle *alpm.Handle, syncDBs []alpm.Database, packages []string) {
 		fmt.Println(Blue + "(" + fmt.Sprintf("%d", i+1) + ") " + "--> " + Reset + Green + pkg.DB().Name() + ":" + Reset + White + pkg.Name() + " (" + fmt.Sprintf("%.2f", pkgSizeMiB) + " MiB)" + Reset)
 	}
 	fmt.Println(White + "==> " + fmt.Sprint(len(pkgs)) + " " + translations.Translate("len_packages_to_add") + "." + Reset)
-	fmt.Println(Blue + "==> " + translations.Translate("size_to_add") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB")
+	fmt.Println(Blue + "==> " + translations.Translate("size_to_add") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB" + Reset)
 	var response string
-	fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [y/n] " + Reset)
-	fmt.Scan(&response)
-	if strings.ToLower(response) == "n" {
-		fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
-		trans.Release()
-		return
+	if !noconfirm {
+		fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [y/n] " + Reset)
+		fmt.Scan(&response)
+		if strings.ToLower(response) == "n" {
+			fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
+			trans.Release()
+			return
+		}
 	}
+
 	conflicts, err := trans.Commit()
 	if err != nil {
 		log.Fatal(err)
@@ -123,11 +126,14 @@ func Install(handle *alpm.Handle, syncDBs []alpm.Database, packages []string) {
 		return
 	}
 	fmt.Println(Green + "==> " + Reset + White + translations.Translate("sucess") + Reset)
-	fmt.Print(White + "==> " + translations.Translate("ask_to_read_alpm_log") + " [y/n] " + Reset)
-	fmt.Scan(&response)
-	if strings.ToLower(response) == "n" {
-		return
+	if !noconfirm {
+		fmt.Print(White + "==> " + translations.Translate("ask_to_read_alpm_log") + " [y/n] " + Reset)
+		fmt.Scan(&response)
+		if strings.ToLower(response) == "n" {
+			return
+		}
 	}
+
 	// Open the log file in the default editor and make the program wait until the editor is closed
 	cmd := exec.Command("xdg-open", "/tmp/alpm.log")
 	err = cmd.Run()

@@ -32,3 +32,9 @@
 -> Improved translate.go (Loading files in mem instead of reading every time)
 -> added release link on `gonob release_notes`.
 -> go-git for git usage.
+
+- gonob 2.0.0
+-> New parser (so better parsing, better args usage, less bugs...)
+-> Added noconfirm for wrapper.install.
+-> Fixed len package to remove.
+-> Better help message

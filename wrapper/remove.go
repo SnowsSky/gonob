@@ -89,8 +89,8 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noc
 		TotalSizeMiB = float64(TotalSizeBytes) / (1024 * 1024)
 		fmt.Println(Blue + "(" + fmt.Sprintf("%d", i+1) + ") " + "--> " + Reset + White + pkg.Name() + " (" + fmt.Sprintf("%.2f", pkgSizeMiB) + " MiB)" + Reset)
 	}
-	fmt.Println(White + "==> " + fmt.Sprint(len(packages)) + " " + translations.Translate("len_packages_to_remove") + "." + Reset)
-	fmt.Println(Blue + "==> " + translations.Translate("size_to_remove") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB")
+	fmt.Println(White + "==> " + fmt.Sprint(len(DepsToRemove)) + " " + translations.Translate("len_packages_to_remove") + "." + Reset)
+	fmt.Println(Blue + "==> " + translations.Translate("size_to_remove") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB" + Reset)
 	var response string
 	if !noconfirm {
 
