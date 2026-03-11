@@ -22,6 +22,7 @@ func Local_Install(handle *alpm.Handle, packages []string, noconfirm bool) {
 	(*handle).SetDownloadCallbackFunc(DownloadProgressCallback)
 	(*handle).SetProgressCallbackFunc(InstallProgressCallback)
 	defer trans.Release()
+	StopHandle(trans)
 
 	for _, pkg := range packages {
 		toadd, err := (*handle).LoadPackage(pkg, true, 0)
@@ -39,17 +40,14 @@ func Local_Install(handle *alpm.Handle, packages []string, noconfirm bool) {
 	_, err = trans.Prepare()
 	if err != nil {
 		log.Fatal(err)
-		trans.Release()
 	}
 
 	pkgs, err := trans.GetAdd()
 	if len(pkgs) <= 0 {
-		trans.Release()
 		return
 	}
 	if err != nil {
 		log.Fatal(err)
-		trans.Release()
 	}
 
 	for i, pkg := range pkgs {
@@ -84,12 +82,12 @@ func Local_Install(handle *alpm.Handle, packages []string, noconfirm bool) {
 	fmt.Println(Green + "==> " + Reset + White + translations.Translate("sucess") + Reset)
 	if !noconfirm {
 		fmt.Print(White + "==> " + translations.Translate("ask_to_read_alpm_log") + " [y/n] " + Reset)
+		fmt.Scan(&response)
+		if strings.ToLower(response) == "n" {
+			return
+		}
 	}
 
-	fmt.Scan(&response)
-	if strings.ToLower(response) == "n" {
-		return
-	}
 	// Open the log file in the default editor and make the program wait until the editor is closed
 	cmd := exec.Command("xdg-open", "/tmp/alpm.log")
 	err = cmd.Run()

@@ -64,12 +64,12 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noc
 	}
 	(*handle).SetProgressCallbackFunc(ProgressBarCallback)
 	defer trans.Release()
+	StopHandle(trans)
 
 	for _, pkg := range pkgInfos {
 		err = trans.RemovePkg(pkg)
 		if err != nil {
 			log.Fatal(err)
-			trans.Release()
 			return
 		}
 	}
@@ -77,7 +77,6 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noc
 	_, err = trans.Prepare()
 	if err != nil {
 		log.Fatal(err)
-		trans.Release()
 		return
 	}
 
@@ -89,8 +88,8 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noc
 		TotalSizeMiB = float64(TotalSizeBytes) / (1024 * 1024)
 		fmt.Println(Blue + "(" + fmt.Sprintf("%d", i+1) + ") " + "--> " + Reset + White + pkg.Name() + " (" + fmt.Sprintf("%.2f", pkgSizeMiB) + " MiB)" + Reset)
 	}
-	fmt.Println(White + "==> " + fmt.Sprint(len(packages)) + " " + translations.Translate("len_packages_to_remove") + "." + Reset)
-	fmt.Println(Blue + "==> " + translations.Translate("size_to_remove") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB")
+	fmt.Println(White + "==> " + fmt.Sprint(len(DepsToRemove)) + " " + translations.Translate("len_packages_to_remove") + "." + Reset)
+	fmt.Println(Blue + "==> " + translations.Translate("size_to_remove") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB" + Reset)
 	var response string
 	if !noconfirm {
 
@@ -98,7 +97,6 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noc
 		fmt.Scan(&response)
 		if strings.ToLower(response) == "n" {
 			fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
-			trans.Release()
 			return
 		}
 	}
