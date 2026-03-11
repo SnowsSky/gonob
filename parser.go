@@ -88,8 +88,10 @@ func parser(args []string) {
 			wrapper.List(handle, syncDBs)
 		}
 	case "remove":
+		useSudo()
 		wrapper.Remove(handle, syncDBs, entry, noconfirm)
 	case "local_install":
+		useSudo()
 		wrapper.Local_Install(handle, entry, noconfirm)
 	case "release_notes":
 		Release_note()
