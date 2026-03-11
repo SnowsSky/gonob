@@ -84,12 +84,12 @@ func Local_Install(handle *alpm.Handle, packages []string, noconfirm bool) {
 	fmt.Println(Green + "==> " + Reset + White + translations.Translate("sucess") + Reset)
 	if !noconfirm {
 		fmt.Print(White + "==> " + translations.Translate("ask_to_read_alpm_log") + " [y/n] " + Reset)
+		fmt.Scan(&response)
+		if strings.ToLower(response) == "n" {
+			return
+		}
 	}
 
-	fmt.Scan(&response)
-	if strings.ToLower(response) == "n" {
-		return
-	}
 	// Open the log file in the default editor and make the program wait until the editor is closed
 	cmd := exec.Command("xdg-open", "/tmp/alpm.log")
 	err = cmd.Run()
