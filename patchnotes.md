@@ -38,4 +38,4 @@
 -> Added noconfirm for wrapper.install.
 -> Fixed len package to remove.
 -> Better help message
--> bug fixes
+-> bug fixes (especially the lock one)

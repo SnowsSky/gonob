@@ -76,11 +76,11 @@ func Install(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, no
 	(*handle).SetDownloadCallbackFunc(DownloadProgressCallback)
 	(*handle).SetProgressCallbackFunc(InstallProgressCallback)
 	defer trans.Release()
+	StopHandle(trans)
 	for _, pkg := range pkgInfos {
 		err = trans.AddPkg(pkg)
 		if err != nil {
 			log.Fatal(err)
-			trans.Release()
 			return
 		}
 	}
@@ -88,12 +88,10 @@ func Install(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, no
 	_, err = trans.Prepare()
 	if err != nil {
 		log.Fatal(err)
-		trans.Release()
 	}
 	pkgs, err := trans.GetAdd()
 	if err != nil {
 		log.Fatal(err)
-		trans.Release()
 	}
 
 	for i, pkg := range pkgs {
@@ -110,7 +108,6 @@ func Install(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, no
 		fmt.Scan(&response)
 		if strings.ToLower(response) == "n" {
 			fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
-			trans.Release()
 			return
 		}
 	}

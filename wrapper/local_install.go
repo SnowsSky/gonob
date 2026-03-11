@@ -22,6 +22,7 @@ func Local_Install(handle *alpm.Handle, packages []string, noconfirm bool) {
 	(*handle).SetDownloadCallbackFunc(DownloadProgressCallback)
 	(*handle).SetProgressCallbackFunc(InstallProgressCallback)
 	defer trans.Release()
+	StopHandle(trans)
 
 	for _, pkg := range packages {
 		toadd, err := (*handle).LoadPackage(pkg, true, 0)
@@ -39,17 +40,14 @@ func Local_Install(handle *alpm.Handle, packages []string, noconfirm bool) {
 	_, err = trans.Prepare()
 	if err != nil {
 		log.Fatal(err)
-		trans.Release()
 	}
 
 	pkgs, err := trans.GetAdd()
 	if len(pkgs) <= 0 {
-		trans.Release()
 		return
 	}
 	if err != nil {
 		log.Fatal(err)
-		trans.Release()
 	}
 
 	for i, pkg := range pkgs {

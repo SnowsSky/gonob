@@ -64,12 +64,12 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noc
 	}
 	(*handle).SetProgressCallbackFunc(ProgressBarCallback)
 	defer trans.Release()
+	StopHandle(trans)
 
 	for _, pkg := range pkgInfos {
 		err = trans.RemovePkg(pkg)
 		if err != nil {
 			log.Fatal(err)
-			trans.Release()
 			return
 		}
 	}
@@ -77,7 +77,6 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noc
 	_, err = trans.Prepare()
 	if err != nil {
 		log.Fatal(err)
-		trans.Release()
 		return
 	}
 
@@ -98,7 +97,6 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noc
 		fmt.Scan(&response)
 		if strings.ToLower(response) == "n" {
 			fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
-			trans.Release()
 			return
 		}
 	}
