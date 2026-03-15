@@ -10,18 +10,10 @@ import (
 	"strings"
 
 	alpm "github.com/Jguer/dyalpm"
+	scolor "github.com/SnowsSky/scolor/pkg"
 	git "github.com/go-git/go-git/v6"
 )
 
-var Reset = "\033[0m"
-var Red = "\033[1;31m"
-var Green = "\033[1;32m"
-var Yellow = "\033[1;33m"
-var Blue = "\033[1;34m"
-var Magenta = "\033[1;35m"
-var Cyan = "\033[1;36m"
-var Gray = "\033[1;37m"
-var White = "\033[1;97m"
 var builddest string
 
 func CheckPkgFolder() bool {
@@ -36,25 +28,35 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 	for i, pkg := range pkgs {
 		pkg_name, pkg_version, pkg_maintainer, pkg_popularity, err := InstallSearch(pkg)
 		if err != nil {
+			scolor.BoldRed.DisplayText("==> ")
+			scolor.BoldWhite.DisplayText(translations.Translate("error_string") + " : " + translations.Translate("aur_unreachable"))
 			fmt.Println(err)
 			return
 		}
 		_, err = wrapper.SearchPackage(pkg_name, handle)
 		if err != nil {
-			fmt.Println(Green + "==> " + Reset + White + translations.Translate("reinstalling") + " [" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
-		} else {
-			fmt.Println(Green + "==> " + Reset + White + translations.Translate("installing") + " [" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  " + Blue + "-->" + Reset + " " + White + pkg_name + "@" + pkg_version + "..." + Reset)
+			scolor.BoldGreen.DisplayText("==> ")
+			scolor.BoldWhite.DisplayText(translations.Translate("reinstalling") + " [" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  ")
+			scolor.BoldBlue.DisplayText("--> ")
+			scolor.BoldWhite.DisplayText(pkg_name + "@" + pkg_version + "...\n")
 
+		} else {
+			scolor.BoldGreen.DisplayText("==> ")
+			scolor.BoldWhite.DisplayText(translations.Translate("installing") + " [" + fmt.Sprint(i+1) + "/" + fmt.Sprint(len(pkgs)) + "]\n  ")
+			scolor.BoldBlue.DisplayText("--> ")
+			scolor.BoldWhite.DisplayText(pkg_name + "@" + pkg_version + "...\n")
 		}
 
 		builddest = "/tmp/" + pkg_name
 		if !noconfirm && pkg_popularity <= 2.5 {
 			var response string
-			fmt.Println(Yellow + "==> " + translations.Translate("warning_string") + " : " + Reset + White + translations.Translate("low_popularity") + Reset)
-			fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [y/n] " + Reset)
+			scolor.BoldYellow.DisplayText("==> " + translations.Translate("warning_string") + " : ")
+			scolor.BoldWhite.DisplayText(translations.Translate("low_popularity") + "\n")
+			scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_continue") + " [y/n] ")
 			fmt.Scan(&response)
 			if strings.ToLower(response) == "n" {
-				fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
+				scolor.BoldRed.DisplayText("==> ")
+				scolor.BoldWhite.DisplayText(translations.Translate("canceled") + "\n")
 				return
 			}
 		}
@@ -67,19 +69,21 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 				Progress: os.Stdout,
 			})
 			if err != nil {
-				fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("clone_error") + fmt.Sprintf("\n %s", err) + Reset)
+				scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " : ")
+				scolor.BoldWhite.DisplayText(translations.Translate("clone_error") + fmt.Sprintf("\n %s", err) + "\n")
 			}
 		} else {
-			fmt.Println(Yellow + "==> " + translations.Translate("warning_string") + " : " + Reset + White + translations.Translate("folder_already_exists") + Reset)
+			scolor.BoldYellow.DisplayText("==> " + translations.Translate("warning_string") + " : ")
+			scolor.BoldWhite.DisplayText(translations.Translate("folder_already_exists") + "\n")
 		}
 		if !noconfirm {
-			fmt.Print(White + "==> " + translations.Translate("ask_to_read_pkgbuild") + " [y/n] " + Reset)
+			scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_read_pkgbuild") + " [y/n] ")
 			fmt.Scan(&response)
 			if strings.ToLower(response) != "n" {
 				// Open the PKGBUILD file in the default editor and make the program wait until the editor is closed
 				cmd := exec.Command("xdg-open", builddest+"/PKGBUILD")
 				err = cmd.Run()
-				fmt.Print(White + "==> " + translations.Translate("press_any_key_to_continue") + " : " + Reset)
+				scolor.BoldWhite.DisplayText("==> " + translations.Translate("press_any_key_to_continue") + " : ")
 				fmt.Scan(&response)
 			}
 		}
@@ -90,15 +94,18 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 		cmd.Stderr = os.Stderr
 		err = cmd.Run()
 		if err != nil {
-			fmt.Println(Red + "==> " + translations.Translate("error_string") + Reset + White + " " + translations.Translate("build_error") + Reset)
+			scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " ")
+			scolor.BoldWhite.DisplayText(translations.Translate("build_error") + "\n")
 			return
 		}
-		fmt.Println(Green + "==> " + Reset + White + translations.Translate("build_success") + Reset)
+		scolor.BoldGreen.DisplayText("==> ")
+		scolor.BoldWhite.DisplayText(translations.Translate("build_success") + "\n")
 
 		var pkgPath string
 		files, err := os.ReadDir(builddest)
 		if err != nil {
-			fmt.Println(Red + "==> " + translations.Translate("error_string") + Reset + White + " " + translations.Translate("build_error") + Reset)
+			scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " ")
+			scolor.BoldWhite.DisplayText(translations.Translate("build_error") + "\n")
 			return
 		}
 		for _, f := range files {
@@ -117,7 +124,8 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 		cmd.Stderr = os.Stderr
 		err = cmd.Run()
 		if err != nil {
-			fmt.Println(Red + "==> " + translations.Translate("error_string") + Reset + White + " " + translations.Translate("build_error") + Reset)
+			scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " ")
+			scolor.BoldWhite.DisplayText(" " + translations.Translate("build_error") + "\n")
 			return
 		}
 

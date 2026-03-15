@@ -3,10 +3,11 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"gonob/aur"
 	"gonob/translations"
 	"net/http"
 	"strings"
+
+	scolor "github.com/SnowsSky/scolor/pkg"
 )
 
 func Release_note() {
@@ -14,7 +15,8 @@ func Release_note() {
 
 	resp, err := http.Get(url)
 	if err != nil {
-		fmt.Println(aur.Red + "==> " + aur.Reset + aur.White + translations.Translate("error_string") + " : " + translations.Translate("unable_to_get_releases_notes") + aur.Reset)
+		scolor.BoldRed.DisplayText("==> ")
+		scolor.BoldWhite.DisplayText(translations.Translate("error_string") + " : " + translations.Translate("unable_to_get_releases_notes") + "\n")
 	}
 	defer resp.Body.Close()
 
@@ -22,7 +24,7 @@ func Release_note() {
 
 	var result strings.Builder
 	capture := false
-	fmt.Println(aur.White + "- gonob " + version + aur.Reset)
+	scolor.BoldWhite.DisplayText("- gonob " + version + "\n")
 	for scanner.Scan() {
 		line := scanner.Text()
 		if strings.HasPrefix(line, "- gonob") {
@@ -40,5 +42,5 @@ func Release_note() {
 	}
 	content := result.String()
 	fmt.Println(content)
-	fmt.Println(aur.White + "https://raw.githubusercontent.com/SnowsSky/gonob/main/patchnotes.md" + aur.Reset)
+	scolor.BoldWhite.DisplayText("https://raw.githubusercontent.com/SnowsSky/gonob/main/patchnotes.md \n")
 }

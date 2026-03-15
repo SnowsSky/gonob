@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	alpm "github.com/Jguer/dyalpm"
+	scolor "github.com/SnowsSky/scolor/pkg"
 )
 
 var dest = "/tmp/packages"
@@ -28,7 +29,9 @@ func GetAurPackagesList() {
 
 		err := cmd.Run()
 		if err != nil {
-			fmt.Println(Red+"==> "+translations.Translate("error_string")+Reset+White+translations.Translate("get_aur_package_list_error")+Reset, err)
+			scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " ")
+			scolor.BoldWhite.DisplayText(translations.Translate("get_aur_package_list_error"))
+			fmt.Printf("%s\n", err)
 		}
 		cmd = exec.Command("gunzip", "-f", "/tmp/packages.gz")
 		cmd.Stdout = os.Stdout
@@ -36,7 +39,9 @@ func GetAurPackagesList() {
 
 		err = cmd.Run()
 		if err != nil {
-			fmt.Println(Red+"==> "+translations.Translate("error_string")+Reset+White+translations.Translate("get_aur_package_list_error")+Reset, err)
+			scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " ")
+			scolor.BoldWhite.DisplayText(translations.Translate("get_aur_package_list_error"))
+			fmt.Printf("%s\n", err)
 		}
 
 	}
@@ -46,14 +51,18 @@ func List(handle *alpm.Handle, syncDBs []alpm.Database) {
 	Packages := DetectNonOfficialPackages(handle, syncDBs)
 	UnknownPackages, AurPackages := FilterPackages(Packages)
 	for _, pkg := range AurPackages {
-		fmt.Println(Green + "--> " + Reset + White + pkg.Name + "@" + pkg.Version + Reset)
+		scolor.BoldGreen.DisplayText("--> ")
+		scolor.BoldWhite.DisplayText(pkg.Name + "@" + pkg.Version + "\n")
 	}
-	fmt.Println(Green + "==> " + Reset + White + fmt.Sprint(len(AurPackages)) + " " + translations.Translate("aur_packages") + Reset)
+	scolor.BoldGreen.DisplayText("==> ")
+	scolor.BoldWhite.DisplayText(fmt.Sprint(len(AurPackages)) + " " + translations.Translate("aur_packages") + "\n")
 	for _, pkg := range UnknownPackages {
-		fmt.Println(Yellow + "--> " + Reset + White + pkg.Name + "@" + pkg.Version + Reset)
+		scolor.BoldYellow.DisplayText("--> ")
+		scolor.BoldWhite.DisplayText(pkg.Name + "@" + pkg.Version + "\n")
 	}
 	if len(UnknownPackages) >= 1 {
-		fmt.Println(Yellow + "==> " + Reset + White + fmt.Sprint(len(UnknownPackages)) + " " + translations.Translate("unknown_package_source") + Reset)
+		scolor.BoldYellow.DisplayText("==> ")
+		scolor.BoldWhite.DisplayText(fmt.Sprint(len(UnknownPackages)) + " " + translations.Translate("unknown_package_source") + "\n")
 	}
 
 }
@@ -65,7 +74,9 @@ func FilterPackages(pkgs []AurPackage) ([]AurPackage, []AurPackage) {
 	data, err := os.ReadFile("/tmp/packages")
 	content := string(data)
 	if err != nil {
-		fmt.Println(Red+"==> "+translations.Translate("error_string")+Reset+White+translations.Translate("get_aur_package_list_error")+Reset, err)
+		scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " ")
+		scolor.BoldWhite.DisplayText(translations.Translate("get_aur_package_list_error") + " ")
+		fmt.Printf("%s\n", err)
 	}
 	for _, pkg := range pkgs {
 		if strings.Contains(content, pkg.Name) {

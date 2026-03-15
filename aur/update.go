@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	alpm "github.com/Jguer/dyalpm"
+	scolor "github.com/SnowsSky/scolor/pkg"
 )
 
 type AurPackage struct {
@@ -41,12 +42,14 @@ func DetectNonOfficialPackages(handle *alpm.Handle, syncDBs []alpm.Database) []A
 }
 
 func Update(handle *alpm.Handle, syncDBs []alpm.Database, noconfirm bool) {
-	fmt.Println(Blue + "==> " + Reset + White + translations.Translate("fetch_aur_updates") + Reset)
+	scolor.BoldBlue.DisplayText("==> ")
+	scolor.BoldWhite.DisplayText(translations.Translate("fetch_aur_updates") + "\n")
 	AurPackages := DetectNonOfficialPackages(handle, syncDBs)
 	ToUpdate := []string{}
 
 	if len(AurPackages) == 0 {
-		fmt.Println(Green + "==> " + translations.Translate("warning_string") + " : " + Reset + White + translations.Translate("no_aur_updates") + Reset)
+		scolor.BoldGreen.DisplayText("==> " + translations.Translate("warning_string") + " : ")
+		scolor.BoldWhite.DisplayText(translations.Translate("no_aur_updates") + "\n")
 		return
 	}
 	AurUpdates := 0
@@ -58,19 +61,26 @@ func Update(handle *alpm.Handle, syncDBs []alpm.Database, noconfirm bool) {
 		if aur_version != pkg.Version {
 			AurUpdates++
 			ToUpdate = append(ToUpdate, pkg.Name)
-			fmt.Println(Green + "==> " + Reset + White + pkg.Name + "@" + Reset + Yellow + pkg.Version + Reset + " --> " + Green + aur_version + Reset)
+			scolor.BoldGreen.DisplayText("==> ")
+			scolor.BoldWhite.DisplayText(pkg.Name + "@")
+			scolor.BoldYellow.DisplayText(pkg.Version)
+			scolor.BoldWhite.DisplayText(" --> ")
+			scolor.BoldGreen.DisplayText(aur_version + "\n")
 		}
 	}
 	if AurUpdates == 0 {
-		fmt.Println(Green + "==> " + translations.Translate("warning_string") + " : " + Reset + White + translations.Translate("no_aur_updates") + Reset)
+		scolor.BoldGreen.DisplayText("==> " + translations.Translate("warning_string") + " : ")
+		scolor.BoldWhite.DisplayText(translations.Translate("no_aur_updates") + "\n")
 		return
 	}
-	fmt.Println(Yellow + "==> " + Reset + White + fmt.Sprint(AurUpdates) + " " + translations.Translate("aur_updates_available") + Reset)
+	scolor.BoldYellow.DisplayText("==> ")
+	scolor.BoldWhite.DisplayText(fmt.Sprint(AurUpdates) + " " + translations.Translate("aur_updates_available") + "\n")
 	if !noconfirm {
-		fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [y/n] " + Reset)
+		scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_continue") + " [y/n] ")
 		fmt.Scan(&response)
 		if strings.ToLower(response) == "n" {
-			fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
+			scolor.BoldRed.DisplayText("==> ")
+			scolor.BoldWhite.DisplayText(translations.Translate("canceled") + "\n")
 			return
 		} else {
 			Install(ToUpdate, handle, true)

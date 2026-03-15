@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	alpm "github.com/Jguer/dyalpm"
+	scolor "github.com/SnowsSky/scolor/pkg"
 )
 
 func Local_Install(handle *alpm.Handle, packages []string, noconfirm bool) {
@@ -15,7 +16,8 @@ func Local_Install(handle *alpm.Handle, packages []string, noconfirm bool) {
 	err := trans.Init(0)
 	if err != nil {
 		if CheckLock() {
-			fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("lock_file_found") + Reset)
+			scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " : ")
+			scolor.BoldWhite.DisplayText(translations.Translate("lock_file_found") + "\n")
 		}
 		return
 	}
@@ -27,12 +29,14 @@ func Local_Install(handle *alpm.Handle, packages []string, noconfirm bool) {
 	for _, pkg := range packages {
 		toadd, err := (*handle).LoadPackage(pkg, true, 0)
 		if err != nil {
-			fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("failed_to_get_local_package") + Reset)
+			scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " : ")
+			scolor.BoldWhite.DisplayText(translations.Translate("failed_to_get_local_package") + "\n")
 			return
 		}
 		err = trans.AddPkg(toadd)
 		if err != nil {
-			fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("failed_to_get_local_package") + Reset)
+			scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " : ")
+			scolor.BoldWhite.DisplayText(translations.Translate("failed_to_get_local_package") + "\n")
 			return
 		}
 	}
@@ -54,17 +58,19 @@ func Local_Install(handle *alpm.Handle, packages []string, noconfirm bool) {
 		pkgSizeMiB := float64(pkg.ISize()) / (1024 * 1024)
 		TotalSizeBytes += float64(pkg.ISize())
 		TotalSizeMiB = float64(TotalSizeBytes) / (1024 * 1024)
-		fmt.Println(Blue + "(" + fmt.Sprintf("%d", i+1) + ") " + "--> " + Reset + Green + "local" + ":" + Reset + White + pkg.Name() + " (" + fmt.Sprintf("%.2f", pkgSizeMiB) + " MiB)" + Reset)
+		scolor.BoldBlue.DisplayText("(" + fmt.Sprintf("%d", i+1) + ") " + "--> ")
+		scolor.BoldGreen.DisplayText("local" + ":")
+		scolor.BoldWhite.DisplayText(pkg.Name() + " (" + fmt.Sprintf("%.2f", pkgSizeMiB) + " MiB)\n")
 	}
-	fmt.Println(White + "==> " + fmt.Sprint(len(pkgs)) + " " + translations.Translate("len_packages_to_add") + "." + Reset)
-	fmt.Println(Blue + "==> " + translations.Translate("size_to_add") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB" + Reset)
+	scolor.BoldWhite.DisplayText("==> " + fmt.Sprint(len(pkgs)) + " " + translations.Translate("len_packages_to_add") + ".\n")
+	scolor.BoldBlue.DisplayText("==> " + translations.Translate("size_to_add") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB\n")
 	var response string
 	if !noconfirm {
-		fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [y/n] " + Reset)
+		scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_continue") + " [y/n] ")
 		fmt.Scan(&response)
 		if strings.ToLower(response) == "n" {
-			fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
-			trans.Release()
+			scolor.BoldRed.DisplayText("==> ")
+			scolor.BoldWhite.DisplayText(translations.Translate("canceled") + "\n")
 			return
 		}
 	}
@@ -79,9 +85,10 @@ func Local_Install(handle *alpm.Handle, packages []string, noconfirm bool) {
 		fmt.Println("File conflicts detected!")
 		return
 	}
-	fmt.Println(Green + "==> " + Reset + White + translations.Translate("sucess") + Reset)
+	scolor.BoldGreen.DisplayText("==> ")
+	scolor.BoldWhite.DisplayText(translations.Translate("sucess") + "\n")
 	if !noconfirm {
-		fmt.Print(White + "==> " + translations.Translate("ask_to_read_alpm_log") + " [y/n] " + Reset)
+		scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_read_alpm_log") + " [y/n] ")
 		fmt.Scan(&response)
 		if strings.ToLower(response) == "n" {
 			return

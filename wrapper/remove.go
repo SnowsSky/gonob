@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	alpm "github.com/Jguer/dyalpm"
+	scolor "github.com/SnowsSky/scolor/pkg"
 )
 
 var pkgInfos []alpm.Package
@@ -38,12 +39,14 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noc
 		pkgInfo, err := SearchPackage(pkg, handle)
 		if pkgInfo == nil || err != nil {
 			// package is not installed.
-			fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("package_not_installed") + Reset)
+			scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " : ")
+			scolor.BoldWhite.DisplayText(translations.Translate("package_not_installed") + "\n")
 			return
 		}
 		if syncpkg, _ := SearchOnSyncDatabases(pkg, handle, syncDBs); syncpkg != nil {
 			if syncpkg.DB().Name() == "core" {
-				fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("can't_remove_core_packages") + Reset)
+				scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " : ")
+				scolor.BoldWhite.DisplayText(translations.Translate("can't_remove_core_packages") + "\n")
 				return
 			}
 		}
@@ -58,7 +61,8 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noc
 	err := trans.Init(flags)
 	if err != nil {
 		if CheckLock() {
-			fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("lock_file_found") + Reset)
+			scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " : ")
+			scolor.BoldWhite.DisplayText(translations.Translate("lock_file_found") + "\n")
 		}
 		return
 	}
@@ -86,17 +90,18 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noc
 		pkgSizeMiB := float64(pkg.ISize()) / (1024 * 1024)
 		TotalSizeBytes += float64(pkg.ISize())
 		TotalSizeMiB = float64(TotalSizeBytes) / (1024 * 1024)
-		fmt.Println(Blue + "(" + fmt.Sprintf("%d", i+1) + ") " + "--> " + Reset + White + pkg.Name() + " (" + fmt.Sprintf("%.2f", pkgSizeMiB) + " MiB)" + Reset)
+		scolor.BoldBlue.DisplayText("(" + fmt.Sprintf("%d", i+1) + ") " + "--> ")
+		scolor.BoldWhite.DisplayText(pkg.Name() + " (" + fmt.Sprintf("%.2f", pkgSizeMiB) + " MiB)\n")
 	}
-	fmt.Println(White + "==> " + fmt.Sprint(len(DepsToRemove)) + " " + translations.Translate("len_packages_to_remove") + "." + Reset)
-	fmt.Println(Blue + "==> " + translations.Translate("size_to_remove") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB" + Reset)
+	scolor.BoldWhite.DisplayText("==> " + fmt.Sprint(len(DepsToRemove)) + " " + translations.Translate("len_packages_to_remove") + ".\n")
+	scolor.BoldBlue.DisplayText("==> " + translations.Translate("size_to_remove") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB\n")
 	var response string
 	if !noconfirm {
-
-		fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [y/n] " + Reset)
+		scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_continue") + " [y/n] ")
 		fmt.Scan(&response)
 		if strings.ToLower(response) == "n" {
-			fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
+			scolor.BoldRed.DisplayText("==> ")
+			scolor.BoldWhite.DisplayText(translations.Translate("canceled") + "\n")
 			return
 		}
 	}
@@ -111,16 +116,18 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noc
 		fmt.Println("File conflicts detected!")
 		return
 	}
-	fmt.Println(Green + "==> " + Reset + White + translations.Translate("sucess") + Reset)
+	scolor.BoldGreen.DisplayText("==> ")
+	scolor.BoldWhite.DisplayText(translations.Translate("sucess") + "\n")
 	if !noconfirm {
-		fmt.Print(White + "==> " + translations.Translate("ask_to_read_alpm_log") + " [y/n] " + Reset)
+		scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_read_alpm_log") + " [y/n] ")
 		fmt.Scan(&response)
 		if strings.ToLower(response) == "n" {
 			return
+		} else {
+			// Open the log file in the default editor and make the program wait until the editor is closed
+			cmd := exec.Command("xdg-open", "/tmp/alpm.log")
+			err = cmd.Run()
 		}
-		// Open the log file in the default editor and make the program wait until the editor is closed
-		cmd := exec.Command("xdg-open", "/tmp/alpm.log")
-		err = cmd.Run()
 	}
 
 }
