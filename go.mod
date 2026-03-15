@@ -5,6 +5,7 @@ go 1.25.5
 require (
 	github.com/Jguer/dyalpm v0.1.1
 	github.com/Morganamilo/go-pacmanconf v0.0.0-20210502114700-cff030e927a5
+	github.com/SnowsSky/scolor v1.1.0
 	github.com/go-git/go-git/v6 v6.0.0-20260305211659-2083cf940afa
 )
 

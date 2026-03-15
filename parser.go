@@ -6,20 +6,22 @@ import (
 	"gonob/translations"
 	"gonob/wrapper"
 	"os"
+
+	scolor "github.com/SnowsSky/scolor/pkg"
 )
 
-var version = "2.0.0"
+var version = "2.1.0"
 
 func useSudo() {
 	if os.Geteuid() != 0 {
-		fmt.Println(aur.Red + "==> " + translations.Translate("warning_string") + " : " + translations.Translate("need_sudo_privileges") + aur.Reset)
+		scolor.BoldRed.DisplayText("==> " + translations.Translate("warning_string") + " : " + translations.Translate("need_sudo_privileges") + "\n")
 		os.Exit(1)
 	}
 }
 
 func dontUseSudo() {
 	if os.Geteuid() == 0 {
-		fmt.Println(aur.Red + "==> " + translations.Translate("warning_string") + " : " + translations.Translate("don't_use_sudo") + aur.Reset)
+		scolor.BoldRed.DisplayText("==> " + translations.Translate("warning_string") + " : " + translations.Translate("don't_use_sudo") + "\n")
 		os.Exit(1)
 	}
 
@@ -114,8 +116,8 @@ Options:
   --noconfirm         Assume 'yes' for all confirmation prompts
 `)
 	case "version":
-		fmt.Println(aur.White + "gonob@" + version + "\nhttps://github.com/SnowsSky/gonob" + aur.Reset)
+		scolor.BoldWhite.DisplayText("gonob@" + version + "\nhttps://github.com/SnowsSky/gonob \n")
 	default:
-		fmt.Println(aur.Yellow + "==> " + translations.Translate("warning_string") + " : " + translations.Translate("unknown_command") + aur.Reset)
+		scolor.BoldYellow.DisplayText("==> " + translations.Translate("warning_string") + " : " + translations.Translate("unknown_command") + "\n")
 	}
 }

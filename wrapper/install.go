@@ -9,6 +9,7 @@ import (
 
 	"github.com/Jguer/dyalpm"
 	alpm "github.com/Jguer/dyalpm"
+	scolor "github.com/SnowsSky/scolor/pkg"
 )
 
 var lastPercent = make(map[string]int)
@@ -57,7 +58,8 @@ func Install(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, no
 		pkgInfo, err := SearchOnSyncDatabases(pkg, handle, syncDBs)
 		if pkgInfo == nil || err != nil {
 			// pkg is not in DBS
-			fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("unknown_package") + Reset)
+			scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " : ")
+			scolor.BoldWhite.DisplayText(translations.Translate("unknown_package") + "\n")
 			return
 		}
 		pkgInfos = append(pkgInfos, pkgInfo)
@@ -69,7 +71,8 @@ func Install(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, no
 	err := trans.Init(0)
 	if err != nil {
 		if CheckLock() {
-			fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("lock_file_found") + Reset)
+			scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " : ")
+			scolor.BoldWhite.DisplayText(translations.Translate("lock_file_found") + "\n")
 		}
 		return
 	}
@@ -98,16 +101,19 @@ func Install(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, no
 		pkgSizeMiB := float64(pkg.ISize()) / (1024 * 1024)
 		TotalSizeBytes += float64(pkg.ISize())
 		TotalSizeMiB = float64(TotalSizeBytes) / (1024 * 1024)
-		fmt.Println(Blue + "(" + fmt.Sprintf("%d", i+1) + ") " + "--> " + Reset + Green + pkg.DB().Name() + ":" + Reset + White + pkg.Name() + " (" + fmt.Sprintf("%.2f", pkgSizeMiB) + " MiB)" + Reset)
+		scolor.BoldBlue.DisplayText("(" + fmt.Sprintf("%d", i+1) + ") " + "--> ")
+		scolor.BoldGreen.DisplayText(pkg.DB().Name() + ":")
+		scolor.BoldWhite.DisplayText(pkg.Name() + " (" + fmt.Sprintf("%.2f", pkgSizeMiB) + " MiB)\n")
 	}
-	fmt.Println(White + "==> " + fmt.Sprint(len(pkgs)) + " " + translations.Translate("len_packages_to_add") + "." + Reset)
-	fmt.Println(Blue + "==> " + translations.Translate("size_to_add") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB" + Reset)
+	scolor.BoldWhite.DisplayText("==> " + fmt.Sprint(len(pkgs)) + " " + translations.Translate("len_packages_to_add") + ".\n")
+	scolor.BoldBlue.DisplayText("==> " + translations.Translate("size_to_add") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB\n")
 	var response string
 	if !noconfirm {
-		fmt.Print(White + "==> " + translations.Translate("ask_to_continue") + " [y/n] " + Reset)
+		scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_continue") + " [y/n] ")
 		fmt.Scan(&response)
 		if strings.ToLower(response) == "n" {
-			fmt.Println(Red + "==> " + Reset + White + translations.Translate("canceled") + Reset)
+			scolor.BoldRed.DisplayText("==> ")
+			scolor.BoldWhite.DisplayText(translations.Translate("canceled") + "\n")
 			return
 		}
 	}
@@ -122,9 +128,10 @@ func Install(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, no
 		fmt.Println("File conflicts detected!")
 		return
 	}
-	fmt.Println(Green + "==> " + Reset + White + translations.Translate("sucess") + Reset)
+	scolor.BoldGreen.DisplayText("==> ")
+	scolor.BoldWhite.DisplayText(translations.Translate("sucess") + "\n")
 	if !noconfirm {
-		fmt.Print(White + "==> " + translations.Translate("ask_to_read_alpm_log") + " [y/n] " + Reset)
+		scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_read_alpm_log") + " [y/n] ")
 		fmt.Scan(&response)
 		if strings.ToLower(response) == "n" {
 			return

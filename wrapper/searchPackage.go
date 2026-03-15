@@ -1,10 +1,10 @@
 package wrapper
 
 import (
-	"fmt"
 	"gonob/translations"
 
 	alpm "github.com/Jguer/dyalpm"
+	scolor "github.com/SnowsSky/scolor/pkg"
 )
 
 func SearchPackage(pkg_name string, handle *alpm.Handle) (alpm.Package, error) {
@@ -25,10 +25,12 @@ func SearchPackage(pkg_name string, handle *alpm.Handle) (alpm.Package, error) {
 func Search(pkg_name string, handle *alpm.Handle, syncDBs []alpm.Database) {
 	pkg, _ := SearchOnSyncDatabases(pkg_name, handle, syncDBs)
 	if pkg == nil {
-		fmt.Println(Red + "==> " + translations.Translate("error_string") + " : " + Reset + White + translations.Translate("unknown_package") + Reset)
+		scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " : ")
+		scolor.BoldWhite.DisplayText(translations.Translate("unknown_package") + "\n")
 		return
 	}
-	fmt.Println(Green + "==> " + Reset + Green + pkg.DB().Name() + Reset + White + ":" + pkg.Name() + "@" + pkg.Version() + "-" + pkg.Architecture() + "\n" + pkg.Description() + Reset)
+	scolor.BoldGreen.DisplayText("==> " + pkg.DB().Name())
+	scolor.BoldWhite.DisplayText(":" + pkg.Name() + "@" + pkg.Version() + "-" + pkg.Architecture() + "\n" + pkg.Description() + "\n")
 }
 
 var found bool

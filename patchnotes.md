@@ -39,3 +39,7 @@
 -> Fixed len package to remove.
 -> Better help message
 -> bug fixes (especially the lock one)
+
+- gonob 2.1.0
+-> Minors change + bug fixes 
+-> scolor usage for color

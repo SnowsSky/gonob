@@ -6,6 +6,7 @@ import (
 	"log"
 
 	alpm "github.com/Jguer/dyalpm"
+	scolor "github.com/SnowsSky/scolor/pkg"
 )
 
 func List(handle *alpm.Handle, syncDBs []alpm.Database) {
@@ -23,8 +24,10 @@ func List(handle *alpm.Handle, syncDBs []alpm.Database) {
 				break
 			}
 		}
-		fmt.Println(Green + "==> " + Reset + Green + pkg_db + ":" + Reset + White + pkg.Name() + "@" + pkg.Version() + Reset)
+		scolor.BoldGreen.DisplayText("==> " + pkg_db + ":")
+		scolor.BoldWhite.DisplayText(pkg.Name() + "@" + pkg.Version() + "\n")
 		i++
 	}
-	fmt.Println(Green + "==> " + Reset + White + fmt.Sprintf("%d", i) + " " + translations.Translate("installed_packages") + Reset)
+	scolor.BoldGreen.DisplayText("==> ")
+	scolor.BoldWhite.DisplayText(fmt.Sprintf("%d", i) + " " + translations.Translate("installed_packages") + "\n")
 }
