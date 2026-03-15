@@ -1,6 +1,6 @@
 # Welcome to a simple AUR helper written in go named gonob.
 ## gonob is a replacement for nob.
-gonob is disponible on : <br>
+gonob is available on : <br>
     - fr_FR <br>
     - us_US <br>
 # 1 - Downloading 🛜.
