@@ -1,45 +1,45 @@
 - gonob 1.0.0-dev-16
--> Bug Fixes, added --noconfirm.
--> added remove.go
--> Added alpm logfile & more.
+-> Bug Fixes, added --noconfirm. <br>
+-> added remove.go <br>
+-> Added alpm logfile & more. <br>
 
 - gonob 1.0.0 
--> Bug fixes
--> Added install.go
--> Better remove func + Added --noconfirm opt
--> Added gonob list for non aur packages
--> Added gonob local_install (gonob -U) for local install
--> Fixed lock issues
--> gonob install --aur now use gonob -U instead of pacman -U
--> Added install.sh script
+-> Bug fixes <br>
+-> Added install.go <br>
+-> Better remove func + Added --noconfirm opt <br>
+-> Added gonob list for non aur packages <br>
+-> Added gonob local_install (gonob -U) for local install <br>
+-> Fixed lock issues <br>
+-> gonob install --aur now use gonob -U instead of pacman -U <br>
+-> Added install.sh script <br>
 
 - gonob 1.1.0-dev-1
--> by now, You can't launch AUR commands with sudo.
--> Fixed + Improvements to the download bar
--> the packages with "-debug" won't shows up anymore on `gonob list --aur` as a unknown package.
--> Added `gonob -Ss` for official packages.
--> Fixed the colors issues on local-install
--> Added `gonob release_notes` to see release note of the version
--> Improved translate.go (Loading files in mem instead of reading every time)
+-> by now, You can't launch AUR commands with sudo. <br>
+-> Fixed + Improvements to the download bar <br>
+-> the packages with "-debug" won't shows up anymore on `gonob list --aur` as a unknown package. <br>
+-> Added `gonob -Ss` for official packages. <br>
+-> Fixed the colors issues on local-install <br>
+-> Added `gonob release_notes` to see release note of the version <br>
+-> Improved translate.go (Loading files in mem instead of reading every time) <br>
 
 - gonob 1.1.0
--> by now, You can't launch AUR commands with sudo.
--> Fixed + Improvements to the download bar
--> the packages with "-debug" won't shows up anymore on `gonob list --aur` as a unknown package.
--> Added `gonob -Ss` for official packages.
--> Fixed the colors issues on local-install
--> Added `gonob release_notes` to see release note of the version
--> Improved translate.go (Loading files in mem instead of reading every time)
--> added release link on `gonob release_notes`.
--> go-git for git usage.
+-> by now, You can't launch AUR commands with sudo. <br>
+-> Fixed + Improvements to the download bar <br>
+-> the packages with "-debug" won't shows up anymore on `gonob list --aur` as a unknown package. <br>
+-> Added `gonob -Ss` for official packages. <br>
+-> Fixed the colors issues on local-install <br>
+-> Added `gonob release_notes` to see release note of the version <br>
+-> Improved translate.go (Loading files in mem instead of reading every time) <br>
+-> added release link on `gonob release_notes`. <br>
+-> go-git for git usage. <br>
 
 - gonob 2.0.0
--> New parser (so better parsing, better args usage, less bugs...)
--> Added noconfirm for wrapper.install.
--> Fixed len package to remove.
--> Better help message
--> bug fixes (especially the lock one)
+-> New parser (so better parsing, better args usage, less bugs...) <br>
+-> Added noconfirm for wrapper.install. <br>
+-> Fixed len package to remove. <br>
+-> Better help message <br>
+-> bug fixes (especially the lock one) <br>
 
 - gonob 2.1.0
--> Minors change + bug fixes 
--> scolor usage for color
+-> Minors change + bug fixes  <br>
+-> scolor usage for color <br>
