@@ -1,9 +1,7 @@
 #!/bin/bash
 
-# The script version, not gonob
-version="1.1.0"
 
-echo "gonob - Install Script -> $version"
+echo "gonob - Install Script"
 
 echo "1 - Install / Reinstall gonob"
 echo "2 - Build only"
@@ -53,6 +51,8 @@ install_translations() {
 }
 
 if [ "$opt" == "1" ]; then
+    echo "Updating local clone..."
+    git pull -f -n
     echo "Installing Build dependencies..."
     sudo pacman -S go --noconfirm --needed
     if [ $? -ne 0 ]; then
@@ -72,6 +72,8 @@ if [ "$opt" == "1" ]; then
     exit 0
 
 elif [ "$opt" == "2" ]; then 
+    echo "Updating local clone..."
+    git pull -f -n
     build
     echo "Do you want to install translations ? (NEEDED to execute gonob) y/n "
     read -p "Make your choice: " opt
