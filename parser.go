@@ -7,6 +7,7 @@ import (
 	"gonob/wrapper"
 	"os"
 
+	"github.com/Jguer/dyalpm"
 	scolor "github.com/SnowsSky/scolor/pkg"
 )
 
@@ -116,7 +117,7 @@ Options:
   --noconfirm         Assume 'yes' for all confirmation prompts
 `)
 	case "version":
-		scolor.BoldWhite.DisplayText("gonob@" + version + "\nhttps://github.com/SnowsSky/gonob \n")
+		scolor.BoldWhite.DisplayText("gonob@" + version + "\nlibalpm@" + fmt.Sprintf("%s", dyalpm.Version()) + "\nhttps://github.com/SnowsSky/gonob" + "\n")
 	default:
 		scolor.BoldYellow.DisplayText("==> " + translations.Translate("warning_string") + " : " + translations.Translate("unknown_command") + "\n")
 	}

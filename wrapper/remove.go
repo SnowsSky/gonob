@@ -15,25 +15,6 @@ var pkgInfos []alpm.Package
 var TotalSizeBytes float64 = 0
 var TotalSizeMiB float64 = 0
 
-func ProgressBarCallback(progress int32, pkg string, percent int, howmany uint64, current uint64) {
-	barLen := 30
-	filled := int(float64(percent) / 100.0 * float64(barLen))
-
-	bar := ""
-	if filled == barLen {
-		bar = strings.Repeat("=", barLen)
-	} else if filled > 0 {
-		bar += strings.Repeat("=", filled-1)
-		bar += ">"
-	}
-	bar += strings.Repeat(" ", barLen-filled)
-
-	fmt.Printf("\r(%d/%d) %s : %s [%s] %3d%% ", current, howmany, translations.Translate("removing"), pkg, bar, percent)
-	if percent == 100 {
-		fmt.Println()
-	}
-}
-
 func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noconfirm bool) {
 	for _, pkg := range packages {
 		pkgInfo, err := SearchPackage(pkg, handle)
