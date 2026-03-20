@@ -10,6 +10,15 @@ import (
 	alpm "github.com/Jguer/dyalpm"
 )
 
+type Alpm struct {
+	handle       *alpm.Handle
+	localDB      alpm.Database
+	syncDB       []alpm.Database
+	syncDBsCache []alpm.Database
+}
+
+var GAlpm *Alpm
+
 var builddest string
 
 func StopHandle(trans alpm.Transaction) {
@@ -30,5 +39,9 @@ func InitHandle() *alpm.Handle {
 		log.Fatal(err)
 	}
 	handle.SetLogFile("/tmp/alpm.log")
-	return &handle
+	GAlpm = &Alpm{
+		handle: &handle,
+	}
+
+	return GAlpm.handle
 }
