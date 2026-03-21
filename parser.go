@@ -11,7 +11,7 @@ import (
 	scolor "github.com/SnowsSky/scolor/pkg"
 )
 
-var version = "2.1.0"
+var version = "2.2.0"
 
 func useSudo() {
 	if os.Geteuid() != 0 {
@@ -56,6 +56,8 @@ func parser(args []string) {
 			toexecute = "remove"
 		case "local_install", "-U":
 			toexecute = "local_install"
+		case "clean_cache", "-Sc":
+			toexecute = "clean_cache"
 		case "release_notes":
 			toexecute = "release_notes"
 		case "--help", "-h":
@@ -96,6 +98,9 @@ func parser(args []string) {
 	case "local_install":
 		useSudo()
 		wrapper.Local_Install(handle, entry, noconfirm)
+	case "clean_cache":
+		useSudo()
+		wrapper.Clean_cache()
 	case "release_notes":
 		Release_note()
 	case "help":
@@ -108,6 +113,7 @@ Commands:
   search, -Ss         Search for a package
   list, -Q            List installed packages
   upgrade, -Syu       Upgrade all packages
+  clean_cache, -Sc 	  Clean the pacman cache
   release_notes       See the release notes for gonob
   --version, -v       Show version information
   --help, -h          Show this help message

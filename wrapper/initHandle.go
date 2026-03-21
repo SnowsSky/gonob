@@ -11,8 +11,8 @@ import (
 )
 
 type Alpm struct {
-	handle       *alpm.Handle
-	localDB      alpm.Database
+	handle *alpm.Handle
+	/*localDB      alpm.Database*/
 	syncDB       []alpm.Database
 	syncDBsCache []alpm.Database
 }

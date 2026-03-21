@@ -8,6 +8,8 @@ import (
 	"github.com/Jguer/dyalpm"
 )
 
+var CacheDIR string = "/var/cache/pacman/pkg/"
+
 func ProgressBarCallback(progress int32, pkg string, percent int, howmany uint64, current uint64) {
 	barLen := 30
 	filled := int(float64(percent) / 100.0 * float64(barLen))

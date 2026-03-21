@@ -43,3 +43,8 @@
 - gonob 2.1.0
 -> Minors change + bug fixes  <br>
 -> scolor usage for color <br>
+
+- gonob 2.2.0
+-> Better remove command, you can now delete any package (only if no conflicts) <br>
+-> ALPM funcs like progresscallback are now in alpm.go <br>
+-> New command : clean_cache, -Sc, removes the cache files.<br>

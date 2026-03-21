@@ -16,6 +16,12 @@ var TotalSizeBytes float64 = 0
 var TotalSizeMiB float64 = 0
 
 func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noconfirm bool) {
+	localDB, err := (*handle).LocalDB()
+	conflict := false
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	for _, pkg := range packages {
 		pkgInfo, err := SearchPackage(pkg, handle)
 		if pkgInfo == nil || err != nil {
@@ -24,12 +30,19 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noc
 			scolor.BoldWhite.DisplayText(translations.Translate("package_not_installed") + "\n")
 			return
 		}
-		if syncpkg, _ := SearchOnSyncDatabases(pkg, handle, syncDBs); syncpkg != nil {
-			if syncpkg.DB().Name() == "core" {
-				scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " : ")
-				scolor.BoldWhite.DisplayText(translations.Translate("can't_remove_core_packages") + "\n")
-				return
+
+		for _, p := range localDB.PkgCache().Collect() {
+			for _, dep := range p.Depends() {
+				if dep.Name == pkg {
+					conflict = true
+					scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " : ")
+					scolor.BoldWhite.DisplayText(translations.Translate("conflict") + " : " + fmt.Sprintf("%s\n", p.Name()))
+				}
 			}
+		}
+
+		if conflict {
+			return
 		}
 
 		pkgInfos = append(pkgInfos, pkgInfo)
@@ -39,7 +52,7 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noc
 	trans := alpm.NewTransaction(*handle)
 
 	flags := alpm.TransFlagRecurse | alpm.TransFlagNoSave
-	err := trans.Init(flags)
+	err = trans.Init(flags)
 	if err != nil {
 		if CheckLock() {
 			scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string") + " : ")
