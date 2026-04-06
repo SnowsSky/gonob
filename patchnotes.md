@@ -40,11 +40,18 @@
 -> Better help message <br>
 -> bug fixes (especially the lock one) <br>
 
-- gonob 2.1.0
+- gonob 2.1.0 <br>
 -> Minors change + bug fixes  <br>
 -> scolor usage for color <br>
 
-- gonob 2.2.0
+- gonob 2.2.0 <br>
 -> Better remove command, you can now delete any package (only if no conflicts) <br>
 -> ALPM funcs like progresscallback are now in alpm.go <br>
 -> New command : clean_cache, -Sc, removes the cache files.<br>
+
+- gonob 2.3.0
+-> Bug fixes (Like translation one)
+-> New command : check_cache, -Sch, Checks the cache folder<br>
+-> New command : update, -Sy, Syncs dabatases<br>
+-> New command : upgrade, -Syu, Upgrade your entire system.<br>
+-> Fix : Fixed cache folder.

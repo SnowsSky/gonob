@@ -6,12 +6,13 @@ import (
 	"gonob/translations"
 	"gonob/wrapper"
 	"os"
+	"os/exec"
 
 	"github.com/Jguer/dyalpm"
 	scolor "github.com/SnowsSky/scolor/pkg"
 )
 
-var version = "2.2.0"
+var version = "2.3.0"
 
 func useSudo() {
 	if os.Geteuid() != 0 {
@@ -46,8 +47,12 @@ func parser(args []string) {
 			toexecute = "install"
 		case "search", "-Ss":
 			toexecute = "search"
-		case "upgrade", "-Syu":
+		case "update", "-Sy":
+			toexecute = "update"
+		case "upgrade", "-Su":
 			toexecute = "upgrade"
+		case "-Syu":
+			toexecute = "upgrade+update"
 		case "list", "-Q":
 			toexecute = "list"
 		case "-v", "--version":
@@ -58,9 +63,11 @@ func parser(args []string) {
 			toexecute = "local_install"
 		case "clean_cache", "-Sc":
 			toexecute = "clean_cache"
+		case "check_cache", "-Sch":
+			toexecute = "check_cache"
 		case "release_notes":
 			toexecute = "release_notes"
-		case "--help", "-h":
+		case "--help", "-h", "help":
 			toexecute = "help"
 		default:
 			entry = []string{arg}
@@ -82,10 +89,23 @@ func parser(args []string) {
 		} else {
 			wrapper.Search(entry[0], handle, syncDBs)
 		}
+	case "update":
+		wrapper.Update()
 	case "upgrade":
 		if fromaur {
 			aur.Update(handle, syncDBs, noconfirm)
+		} else {
+			useSudo()
+			wrapper.Upgrade(handle, syncDBs, noconfirm)
 		}
+	case "upgrade+update":
+		dontUseSudo()
+		wrapper.Update()
+		cmd := exec.Command("sudo", "gonob", "-Su")
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		cmd.Run()
+		aur.Update(handle, syncDBs, noconfirm)
 	case "list":
 		if fromaur {
 			aur.List(handle, syncDBs)
@@ -101,6 +121,8 @@ func parser(args []string) {
 	case "clean_cache":
 		useSudo()
 		wrapper.Clean_cache()
+	case "check_cache":
+		wrapper.Check_cache()
 	case "release_notes":
 		Release_note()
 	case "help":
@@ -112,8 +134,11 @@ Commands:
   remove, -R          Remove a package
   search, -Ss         Search for a package
   list, -Q            List installed packages
-  upgrade, -Syu       Upgrade all packages
+  update -Sy 		  Sync databases [CMD NOT AVAILABLE FOR --aur, use gonob -Su --aur or -Syu]
+  upgrade, -Su        Upgrade all packages
+  -Syu 				  Sync databases & Upgrade all packages
   clean_cache, -Sc 	  Clean the pacman cache
+  check_cache, -Sch   Check the pacman cache size
   release_notes       See the release notes for gonob
   --version, -v       Show version information
   --help, -h          Show this help message

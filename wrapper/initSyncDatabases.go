@@ -31,6 +31,7 @@ func InitSyncDatabases(handle *alpm.Handle) []alpm.Database {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	GAlpm = &Alpm{
 		syncDB: syncDBs,
 	}

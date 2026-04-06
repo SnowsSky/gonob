@@ -10,8 +10,41 @@ import (
 	scolor "github.com/SnowsSky/scolor/pkg"
 )
 
-func Clean_cache() {
+func Check_cache() {
+	result, err := ReadCacheDir()
+	if err != nil {
+		scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string"))
+		fmt.Println(err)
+	}
+	totalSize := float64(0)
+	ratio := math.Pow(10, float64(2))
+
+	for _, f := range result {
+
+		fInfo, err := os.Stat(CacheDIR + "/" + f.Name())
+		if err != nil {
+			fmt.Println(err)
+		}
+		fSize := float64(fInfo.Size()) / (1024 * 1024)
+		fSize = math.Round(fSize*ratio) / ratio
+		totalSize += float64(fSize)
+		if !strings.HasSuffix(f.Name(), ".sig") {
+			scolor.BoldBlue.DisplayText("==> ")
+			scolor.BoldWhite.DisplayText(f.Name() + " [" + fmt.Sprintf("%v", fSize) + " MiB]" + "\n")
+		}
+	}
+}
+
+func ReadCacheDir() ([]os.DirEntry, error) {
 	result, err := os.ReadDir(CacheDIR)
+	if err != nil {
+		return nil, err
+	}
+	return result, err
+}
+
+func Clean_cache() {
+	result, err := ReadCacheDir()
 	if err != nil {
 		scolor.BoldRed.DisplayText("==> " + translations.Translate("error_string"))
 		fmt.Println(err)
