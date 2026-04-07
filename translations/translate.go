@@ -15,7 +15,7 @@ func Translate(translation_type string) string {
 	if len(data) <= 0 {
 		file, err := os.ReadFile("/etc/gonob/translations/" + locale + ".json")
 		if err != nil {
-			file, err = os.ReadFile("/etc/gonob/translations/us_US.json")
+			file, err = os.ReadFile("/etc/gonob/translations/en_US.json")
 			if err != nil {
 				fmt.Println("Translations files at /etc/gonob/translations have been corrupted / deleted.\nPlease consider reinstalling gonob.")
 				os.Exit(1)
@@ -33,7 +33,7 @@ func Translate(translation_type string) string {
 	value, ok := data[translation_type]
 
 	if !ok {
-		file, err := os.ReadFile("/etc/gonob/translations/us_US.json")
+		file, err := os.ReadFile("/etc/gonob/translations/en_US.json")
 		if err != nil {
 			fmt.Println("Translations files at /etc/gonob/translations have been corrupted / deleted.\nPlease consider reinstalling gonob.")
 			os.Exit(1)

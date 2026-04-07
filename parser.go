@@ -12,7 +12,7 @@ import (
 	scolor "github.com/SnowsSky/scolor/pkg"
 )
 
-var version = "2.3.0"
+var version = "2.3.1"
 
 func useSudo() {
 	if os.Geteuid() != 0 {
