@@ -76,8 +76,8 @@ func Update(handle *alpm.Handle, syncDBs []alpm.Database, noconfirm bool) {
 	scolor.BoldYellow.DisplayText("==> ")
 	scolor.BoldWhite.DisplayText(fmt.Sprint(AurUpdates) + " " + translations.Translate("aur_updates_available") + "\n")
 	if !noconfirm {
-		scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_continue") + " [y/n] ")
-		fmt.Scan(&response)
+		scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_continue") + " [Y/n] ")
+		fmt.Scanln(&response)
 		if strings.ToLower(response) == "n" {
 			scolor.BoldRed.DisplayText("==> ")
 			scolor.BoldWhite.DisplayText(translations.Translate("canceled") + "\n")

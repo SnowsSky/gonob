@@ -7,12 +7,13 @@ import (
 	"gonob/wrapper"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/Jguer/dyalpm"
 	scolor "github.com/SnowsSky/scolor/pkg"
 )
 
-var version = "2.3.1"
+var version = "2.4.0-b1"
 
 func useSudo() {
 	if os.Geteuid() != 0 {
@@ -36,11 +37,14 @@ func parser(args []string) {
 	noconfirm := false
 	fromaur := false
 	toexecute := ""
+	lang := ""
 	entry := []string{""}
-	for _, arg := range args[0:] {
+	for i, arg := range args[0:] {
 		switch arg {
 		case "--noconfirm":
 			noconfirm = true
+		case "--lang":
+			lang = args[i+1]
 		case "--aur":
 			fromaur = true
 		case "install", "-S":
@@ -72,6 +76,13 @@ func parser(args []string) {
 		default:
 			entry = []string{arg}
 		}
+	}
+	if lang != "" {
+		translations.SetLang(lang)
+	} else {
+		l := os.Getenv("LANG")
+		l = strings.Split(l, ".")[0]
+		translations.SetLang(l)
 	}
 
 	switch toexecute {

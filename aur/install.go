@@ -52,8 +52,8 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 			var response string
 			scolor.BoldYellow.DisplayText("==> " + translations.Translate("warning_string") + " : ")
 			scolor.BoldWhite.DisplayText(translations.Translate("low_popularity") + "\n")
-			scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_continue") + " [y/n] ")
-			fmt.Scan(&response)
+			scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_continue") + " [Y/n] ")
+			fmt.Scanln(&response)
 			if strings.ToLower(response) == "n" {
 				scolor.BoldRed.DisplayText("==> ")
 				scolor.BoldWhite.DisplayText(translations.Translate("canceled") + "\n")
@@ -77,14 +77,14 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 			scolor.BoldWhite.DisplayText(translations.Translate("folder_already_exists") + "\n")
 		}
 		if !noconfirm {
-			scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_read_pkgbuild") + " [y/n] ")
-			fmt.Scan(&response)
+			scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_read_pkgbuild") + " [Y/n] ")
+			fmt.Scanln(&response)
 			if strings.ToLower(response) != "n" {
 				// Open the PKGBUILD file in the default editor and make the program wait until the editor is closed
 				cmd := exec.Command("xdg-open", builddest+"/PKGBUILD")
 				err = cmd.Run()
 				scolor.BoldWhite.DisplayText("==> " + translations.Translate("press_any_key_to_continue") + " : ")
-				fmt.Scan(&response)
+				fmt.Scanln(&response)
 			}
 		}
 

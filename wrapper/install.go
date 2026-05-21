@@ -69,8 +69,8 @@ func Install(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, no
 	scolor.BoldBlue.DisplayText("==> " + translations.Translate("size_to_add") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB\n")
 	var response string
 	if !noconfirm {
-		scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_continue") + " [y/n] ")
-		fmt.Scan(&response)
+		scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_continue") + " [Y/n] ")
+		fmt.Scanln(&response)
 		if strings.ToLower(response) == "n" {
 			scolor.BoldRed.DisplayText("==> ")
 			scolor.BoldWhite.DisplayText(translations.Translate("canceled") + "\n")

@@ -49,9 +49,18 @@
 -> ALPM funcs like progresscallback are now in alpm.go <br>
 -> New command : clean_cache, -Sc, removes the cache files.<br>
 
-- gonob 2.3.0
+- gonob 2.3.0 <br>
 -> Bug fixes (Like translation one)
 -> New command : check_cache, -Sch, Checks the cache folder<br>
 -> New command : update, -Sy, Syncs dabatases<br>
 -> New command : upgrade, -Syu, Upgrade your entire system.<br>
--> Fix : Fixed cache folder.
+-> Fix : Fixed cache folder. <br>
+
+- gonob 2.3.1 <br>
+-> Fixed translations issues <br>
+
+- gonob 2.4.0-b1
+-> Added es_ES translation file
+-> Pointing similar languages to fr / es / US ...
+-> New : gonob --lang <lang>
+-> Fixed inputs, you can now type enter key.

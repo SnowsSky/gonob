@@ -88,7 +88,6 @@ func InstallProgressCallback(progress int32, pkg string, percent int, howmany ui
 		fmt.Println()
 	}
 }
-
 func UpgradeProgressCallback(progress int32, pkg string, percent int, howmany uint64, current uint64) {
 	if pkg == "" {
 		return

@@ -33,7 +33,7 @@
   "need_sudo_privileges": "You must run this command as an administrator.",
   "no_aur_updates": "No AUR updates available.",
   "package_not_installed": "The requested package was not found on your system.",
-  "press_any_key_to_continue": "Press any key to continue... (NOT ENTER)",
+  "press_any_key_to_continue": "Press any key to continue...",
   "reinstalling": "Reinstalling",
   "removing": "Removing",
   "search_found": "Package(s) found for",

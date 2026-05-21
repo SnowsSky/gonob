@@ -33,7 +33,7 @@
   "need_sudo_privileges": "Vous devez éxecuter cette commande en tant qu'administrateur.",
   "no_aur_updates": "Aucune Mise à jour AUR disponible.",
   "package_not_installed": "Le paquet demandé n'a pas été trouvé sur votre système.",
-  "press_any_key_to_continue": "Appuyez sur une touche pour continuer... (PAS ENTREE)",
+  "press_any_key_to_continue": "Appuyez sur une touche pour continuer...",
   "reinstalling": "Réinstallation",
   "removing": "Supression de",
   "search_found": "Paquet(s) trouvé pour",

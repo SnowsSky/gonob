@@ -91,8 +91,8 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noc
 	scolor.BoldBlue.DisplayText("==> " + translations.Translate("size_to_remove") + " : " + fmt.Sprintf("%.2f", TotalSizeMiB) + "MiB\n")
 	var response string
 	if !noconfirm {
-		scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_continue") + " [y/n] ")
-		fmt.Scan(&response)
+		scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_continue") + " [Y/n] ")
+		fmt.Scanln(&response)
 		if strings.ToLower(response) == "n" {
 			scolor.BoldRed.DisplayText("==> ")
 			scolor.BoldWhite.DisplayText(translations.Translate("canceled") + "\n")
@@ -113,8 +113,8 @@ func Remove(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, noc
 	scolor.BoldGreen.DisplayText("==> ")
 	scolor.BoldWhite.DisplayText(translations.Translate("sucess") + "\n")
 	if !noconfirm {
-		scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_read_alpm_log") + " [y/n] ")
-		fmt.Scan(&response)
+		scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_read_alpm_log") + " [Y/n] ")
+		fmt.Scanln(&response)
 		if strings.ToLower(response) == "n" {
 			return
 		} else {
