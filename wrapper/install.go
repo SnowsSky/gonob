@@ -91,8 +91,8 @@ func Install(handle *alpm.Handle, syncDBs []alpm.Database, packages []string, no
 	scolor.BoldGreen.DisplayText("==> ")
 	scolor.BoldWhite.DisplayText(translations.Translate("sucess") + "\n")
 	if !noconfirm {
-		scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_read_alpm_log") + " [y/n] ")
-		fmt.Scan(&response)
+		scolor.BoldWhite.DisplayText("==> " + translations.Translate("ask_to_read_alpm_log") + " [Y/n] ")
+		fmt.Scanln(&response)
 		if strings.ToLower(response) == "n" {
 			return
 		}

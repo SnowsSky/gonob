@@ -59,7 +59,7 @@
 - gonob 2.3.1 <br>
 -> Fixed translations issues <br>
 
-- gonob 2.4.0-b1
+- gonob 2.4.0
 -> Added es_ES translation file
 -> Pointing similar languages to fr / es / US ...
 -> New : gonob --lang <lang>

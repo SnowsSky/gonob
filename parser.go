@@ -13,7 +13,7 @@ import (
 	scolor "github.com/SnowsSky/scolor/pkg"
 )
 
-var version = "2.4.0-b1"
+var version = "2.4.0"
 
 func useSudo() {
 	if os.Geteuid() != 0 {
@@ -44,7 +44,10 @@ func parser(args []string) {
 		case "--noconfirm":
 			noconfirm = true
 		case "--lang":
-			lang = args[i+1]
+			if len(args) <= 1 {
+			} else {
+				lang = args[i+1]
+			}
 		case "--aur":
 			fromaur = true
 		case "install", "-S":
@@ -157,6 +160,7 @@ Commands:
 Options:
   --aur               Assume that your query is from the AUR
   --noconfirm         Assume 'yes' for all confirmation prompts
+  --lang              Change the lang of gonob
 `)
 	case "version":
 		scolor.BoldWhite.DisplayText("gonob@" + version + "\nlibalpm@" + fmt.Sprintf("%s", dyalpm.Version()) + "\nhttps://github.com/SnowsSky/gonob" + "\n")

@@ -3,7 +3,7 @@
 
 echo "gonob - Install Script"
 
-echo "1 - Install / Reinstall gonob"
+echo "1 - Install / Update / Reinstall gonob"
 echo "2 - Build only"
 echo "3 - Remove gonob"
 read -p "Make your choice: " opt
