@@ -7,6 +7,7 @@ import (
 
 	"github.com/Jguer/dyalpm"
 	scolor "github.com/SnowsSky/scolor/pkg"
+	"golang.org/x/term"
 )
 
 var CacheDIR string = "/var/cache/pacman/pkg/"
@@ -70,8 +71,15 @@ func InstallProgressCallback(progress int32, pkg string, percent int, howmany ui
 		return
 	}
 	lastPercent[pkg] = percent
+	width, _, err := term.GetSize(0)
+	if err != nil {
+		width = 80
+	}
 
-	barLen := 30
+	barLen := width - len(fmt.Sprintf("(%d/%d) %s : %s ", current, howmany, translations.Translate("installing"), pkg)) - 8
+	if barLen < 5 {
+		barLen = 5
+	}
 	filled := int(float64(percent) / 100.0 * float64(barLen))
 
 	bar := ""
@@ -97,8 +105,15 @@ func UpgradeProgressCallback(progress int32, pkg string, percent int, howmany ui
 		return
 	}
 	lastPercent[pkg] = percent
+	width, _, err := term.GetSize(0)
+	if err != nil {
+		width = 80
+	}
 
-	barLen := 30
+	barLen := width - len(fmt.Sprintf("(%d/%d) %s : %s ", current, howmany, translations.Translate("installing"), pkg)) - 8
+	if barLen < 5 {
+		barLen = 5
+	}
 	filled := int(float64(percent) / 100.0 * float64(barLen))
 
 	bar := ""
@@ -120,10 +135,22 @@ func DownloadProgressCallback(ev dyalpm.DownloadEvent) {
 	switch ev.Type {
 	case dyalpm.DownloadProgress:
 		data := ev.Data.(dyalpm.DownloadProgressData)
+
 		percent := float64(data.Downloaded) / float64(data.Total) * 100
-		fmt.Printf("\r%s : %s (%.1f%%)", translations.Translate("downloading"), ev.Filename, percent)
+
+		fmt.Printf(
+			"\r\033[K%s : %s (%.1f%%)",
+			translations.Translate("downloading"),
+			ev.Filename,
+			percent,
+		)
 
 	case dyalpm.DownloadCompleted:
-		fmt.Printf("\r%s : %s (100%%)\n", translations.Translate("downloading"), ev.Filename)
+		fmt.Printf(
+			"\r\033[K%s : %s (100%%)",
+			translations.Translate("downloading"),
+			ev.Filename,
+		)
+		fmt.Println()
 	}
 }

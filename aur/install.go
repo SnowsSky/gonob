@@ -2,6 +2,7 @@ package aur
 
 import (
 	"fmt"
+	"gonob/config"
 	"gonob/translations"
 	"gonob/wrapper"
 	"os"
@@ -26,11 +27,10 @@ func CheckPkgFolder() bool {
 
 func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 	for i, pkg := range pkgs {
-		pkg_name, pkg_version, pkg_maintainer, pkg_popularity, err := InstallSearch(pkg)
+		pkg_name, pkg_version /*pkg_maintainer*/, _, pkg_popularity, err := InstallSearch(pkg)
 		if err != nil {
 			scolor.BoldRed.DisplayText("==> ")
-			scolor.BoldWhite.DisplayText(translations.Translate("error_string") + " : " + translations.Translate("aur_unreachable"))
-			fmt.Println(err)
+			scolor.BoldWhite.DisplayText(translations.Translate("error_string") + " : " + err.Error() + "\n")
 			return
 		}
 		_, err = wrapper.SearchPackage(pkg_name, handle)
@@ -60,7 +60,7 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 				return
 			}
 		}
-		fmt.Println(pkg_name, pkg_version, pkg_maintainer, pkg_popularity)
+		// fmt.Println(pkg_name, pkg_version, pkg_maintainer, pkg_popularity)
 
 		if !CheckPkgFolder() {
 			// Clone the given repository to the given directory
@@ -118,8 +118,9 @@ func Install(pkgs []string, handle *alpm.Handle, noconfirm bool) {
 				break
 			}
 		}
-		cmd = exec.Command("sudo", "gonob", "-U", "--noconfirm", pkgPath)
+		cmd = exec.Command(config.PrivilegeEscalationTool, "gonob", "-U", "--noconfirm", pkgPath)
 		cmd.Dir = builddest
+		cmd.Stdin = os.Stdin
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		err = cmd.Run()

@@ -2,6 +2,7 @@ package wrapper
 
 import (
 	"fmt"
+	"gonob/config"
 	"gonob/translations"
 	"log"
 	"os"
@@ -13,7 +14,7 @@ import (
 )
 
 func Update() {
-	cmd := exec.Command("sudo", "pacman", "-Sy")
+	cmd := exec.Command(config.PrivilegeEscalationTool, "pacman", "-Sy")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
@@ -24,7 +25,6 @@ func Update() {
 }
 
 func Upgrade(handle *alpm.Handle, syncDBs []alpm.Database, noconfirm bool) {
-
 	trans := alpm.NewTransaction(*handle)
 	err := trans.Init(0)
 	if err != nil {
@@ -63,7 +63,10 @@ func Upgrade(handle *alpm.Handle, syncDBs []alpm.Database, noconfirm bool) {
 		scolor.BoldWhite.DisplayText(pkg.Name() + " (" + fmt.Sprintf("%.2f", pkgSizeMiB) + " MiB)\n")
 
 	}
+	// TO CHANGE TO CHECK IF THERE IS PKG TO UPGRADE, not only the size
 	if TotalSizeBytes <= float64(0.0) {
+		scolor.BoldBlue.DisplayText("==> ")
+		scolor.BoldWhite.DisplayText(translations.Translate("no_packages_to_update") + "\n")
 		return
 	}
 	scolor.BoldWhite.DisplayText("==> " + fmt.Sprint(len(pkgs)) + " " + translations.Translate("len_packages_to_upgrade") + ".\n")

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"gonob/aur"
+	"gonob/config"
 	"gonob/translations"
 	"gonob/wrapper"
 	"os"
@@ -13,7 +14,7 @@ import (
 	scolor "github.com/SnowsSky/scolor/pkg"
 )
 
-var version = "2.4.0"
+var version = "2.5.0"
 
 func useSudo() {
 	if os.Geteuid() != 0 {
@@ -115,7 +116,8 @@ func parser(args []string) {
 	case "upgrade+update":
 		dontUseSudo()
 		wrapper.Update()
-		cmd := exec.Command("sudo", "gonob", "-Su")
+		cmd := exec.Command(config.PrivilegeEscalationTool, "gonob", "-Su")
+		cmd.Stdin = os.Stdin
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Run()

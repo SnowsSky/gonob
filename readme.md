@@ -6,7 +6,10 @@ gonob is available on : <br>
 # 1 - Downloading 🛜.
 `git clone https://github.com/SnowsSky/gonob.git`
 # 2 - Installing
+# 2.1 - Building from source : 
 I made a script to simplify the installatin process, just run : `chmod +x install.sh` and then `./install.sh`
+# 2.2 - Use my own pacman repository (recommended):
+read : https://github.com/SnowsSky/SNrep
 # 3 - Documentation
 ## 3.1 - How to use it ?
 gonob is pretty simple, using `gonob --help` should be enough. <br>

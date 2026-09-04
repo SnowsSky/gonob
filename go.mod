@@ -7,6 +7,7 @@ require (
 	github.com/Morganamilo/go-pacmanconf v0.0.0-20210502114700-cff030e927a5
 	github.com/SnowsSky/scolor v1.1.0
 	github.com/go-git/go-git/v6 v6.0.0-20260305211659-2083cf940afa
+	golang.org/x/term v0.45.0
 )
 
 require (
@@ -25,5 +26,5 @@ require (
 	github.com/sergi/go-diff v1.4.0 // indirect
 	golang.org/x/crypto v0.48.0 // indirect
 	golang.org/x/net v0.50.0 // indirect
-	golang.org/x/sys v0.41.0 // indirect
+	golang.org/x/sys v0.47.0 // indirect
 )

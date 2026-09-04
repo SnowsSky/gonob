@@ -70,3 +70,9 @@
 -> Pointing similar languages to fr / es / US ...
 -> New : gonob --lang <lang>
 -> Fixed inputs, you can now type enter key.
+
+- gonob 2.5.0
+-> Improved `gonob -Sch`
+-> Fixed `gonob -S --aur`
+-> Improved Ugrade & installing bars. 
+-> Added compatibility for doas.

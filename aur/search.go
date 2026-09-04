@@ -26,11 +26,11 @@ func InstallSearch(pkg string) (string, string, string, float64, error) {
 	URL := "https://aur.archlinux.org/rpc.php?v=5&type=info&arg=" + pkg
 	response, err := http.Get(URL)
 	if err != nil {
-		return "", "", "", 0, err
+		return "", "", "", 0, fmt.Errorf(translations.Translate("aur_unreachable") + err.Error())
 	}
 	defer response.Body.Close()
 	if response.StatusCode != http.StatusOK {
-		return "", "", "", 0, fmt.Errorf("%s", response.StatusCode)
+		return "", "", "", 0, fmt.Errorf(translations.Translate("aur_unreachable")+" (%d)", response.StatusCode)
 	}
 
 	var aurResp AURResponse
@@ -38,7 +38,7 @@ func InstallSearch(pkg string) (string, string, string, float64, error) {
 		return "", "", "", 0, fmt.Errorf(err.Error())
 	}
 	if aurResp.ResultCount == 0 || len(aurResp.Results) == 0 {
-		return "", "", "", 0, fmt.Errorf(translations.Translate("unknown_aur_package"))
+		return "", "", "", 0, fmt.Errorf(pkg + " " + translations.Translate("unknown_aur_package"))
 	}
 
 	result := aurResp.Results[0]
